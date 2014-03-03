@@ -70,7 +70,7 @@ func (t *SDEType) PrintInfo() {
 		fmt.Println(t.GetDescription())
 	}
 	if t.GetPrice() != "" {
-		fmt.Println("-> Costs", t.GetPrice(), "ISK")
+		fmt.Println("-> Cost", t.GetPrice(), "ISK")
 	}
 	//  Scanner
 	if t.Category() == category.ActiveScanner {
@@ -78,7 +78,7 @@ func (t *SDEType) PrintInfo() {
 		fmt.Println("-> Scan DB", t.Attributes["activeScanSignaturePrecision"])
 	}
 	if t.HasTag(category.TagDropsuit) {
-		fmt.Println("====== Dropsuit ======")
+		fmt.Println("===== Dropsuit =====")
 		fmt.Println("-> Heavy Weapons:", t.HeavyWeapons)
 		fmt.Println("-> Light Weapons:", t.LightWeapons)
 		fmt.Println("-> Sidearms:", t.Sidearms)

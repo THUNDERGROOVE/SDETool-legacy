@@ -30,7 +30,6 @@ func DBInitialize() {
 	db, err = sql.Open("sqlite3", SDEFile)
 	if err != nil {
 		// Don't panic or exit, could just mean the SDE wasn't downloaded
-		log.Error("Error opening the SDE ", err.Error())
 		fmt.Println("Error opening the SDE", err.Error())
 	}
 }
@@ -192,6 +191,5 @@ func (t *SDEType) _GetModules() {
 		case "WS":
 			t.Sidearms++
 		}
-
 	}
 }

@@ -1,5 +1,5 @@
 all:
 	go build SDETool
 clean:
-	rm -f dustSDE*.*
-	rm -f log.*
+	rm dustSDE.db.zip
+	rm dustSDE.db

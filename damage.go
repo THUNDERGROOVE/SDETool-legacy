@@ -27,27 +27,30 @@ func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, Basic
 		fmt.Println("Error converting mFireMode0.instantHitDamage to int", err.Error())
 		return 0
 	}
+	
 	k := 1
 	Modifier := float64(0)
+
 	for i := 0; i < ComplexModCount; i++ {
 		Modifier += StackingMultiplier(k) * 10
 		k++
-
 	}
+
 	for i := 0; i < EnhancedModCount; i++ {
 		Modifier += StackingMultiplier(k) * 5
 		k++
-
 	}
+
 	for i := 0; i < BasicModCount; i++ {
 		Modifier += StackingMultiplier(k) * 3
 		k++
 
 	}
+
 	for i := 0; i < ProfLvl; i++ {
 		Modifier += 2
-
 	}
+
 	addDam := float64(baseDamage) * float64((Modifier / 100))
 	return baseDamage + addDam
 }

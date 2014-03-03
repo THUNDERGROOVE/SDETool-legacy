@@ -1,7 +1,6 @@
 package main
 
 import (
-	"code.google.com/p/log4go"
 	"flag"
 	"fmt"
 )
@@ -12,7 +11,6 @@ const (
 )
 
 var (
-	log log4go.Logger
 	// Single commands
 	SearchFlag  *string
 	InfoFlag    *int
@@ -27,10 +25,6 @@ var (
 )
 
 func init() {
-	// Logging stuff
-	log = make(log4go.Logger)
-	log.AddFilter("file", log4go.INFO, log4go.NewFileLogWriter("log.txt", false))
-
 	// Flags
 	SearchFlag = flag.String("s", "", "Search for TypeIDs")
 	InfoFlag = flag.Int("i", 0, "Get info with TypeID")
@@ -45,7 +39,6 @@ func init() {
 	flag.Parse()
 }
 func main() {
-	32
 	checkfile()
 	DBInitialize()
 	if *SearchFlag != "" {
