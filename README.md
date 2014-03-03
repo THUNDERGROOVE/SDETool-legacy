@@ -1,9 +1,23 @@
 SDETool
 =======
 
-Uses the Dust514 **s**tatic **d**ata **e**xport to poll for info.
+Uses the Dust514 **S**tatic **D**ata **E**xport to poll for info.
 
 Highly unoptimized however it should be fairly stable.
+[![Gobuild Download](http://gobuild.io/badge/github.com/THUNDERGROOVE/SDETool/download.png)](http://gobuild.io/github.com/THUNDERGROOVE/SDETool)
+
+Building
+========
+You need [Go](http://golang.org) with your GOPATH enviroment variable setup
+Our dependencies
+```
+go get github.com/mattn/go-sqlite3
+```
+Then you should be able to
+```
+make
+```
+And have your SDETool.exe or SDETool binary!
 
 Usage
 =====
