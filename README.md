@@ -4,6 +4,7 @@ SDETool
 Uses the Dust514 **S**tatic **D**ata **E**xport to poll for info.
 
 Highly unoptimized however it should be fairly stable.
+
 [![Gobuild Download](http://gobuild.io/badge/github.com/THUNDERGROOVE/SDETool/download.png)](http://gobuild.io/github.com/THUNDERGROOVE/SDETool)
 
 Building
