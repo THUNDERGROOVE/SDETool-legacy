@@ -26,7 +26,9 @@ Usage
 ```
 SDETool -s "Logistics ak.0"
 ```
+
 returns
+
 ```
 Searching value: 'Logistics ak.0'
 365308 | 'Neo' Logistics ak.0
@@ -34,11 +36,15 @@ Searching value: 'Logistics ak.0'
 366420 | Imperial Logistics ak.0
 364035 | Logistics ak.0
 ```
+
 useful for getting typeIDs
+
 ```
 SDETool -i 364035
 ```
+
 returns something like
+
 ```
 Getting stats on Logistics ak.0
 ===== Description =====
@@ -62,6 +68,13 @@ When deployed, a soldier equipped with a Logistics suit fills a vital tactical r
 -> 353502 tag_core
 ```
 
+Currently, we only support getting damage values for weapons that don't get their damage inherited from their projectile type.  An example would be to:
+``` bash
+# Get damage for a Kaalakiota Rail Rifle with 3 complex damage mods and proficiency level 3
+SDETool -d 365448 -c 2 -p 3
+``` 
+It will display a 64 bit float which should go out to 16(?) decimal places
+
 TODO
 ====
 Use SQLite indexes for:
@@ -71,3 +84,5 @@ Use SQLite indexes for:
 Can take a really long time to get very vague things like "combat", "rail", etc..
 
 More input types for -i use the typeName and display name to lookup with the best match working?
+
+More calculations like damage for things like dampening, range amps, speed, etc.
