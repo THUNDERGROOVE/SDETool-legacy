@@ -15,14 +15,12 @@ func checkfile() {
 		fmt.Println("Downloading SDE (~1.8MB)")
 		res, err := http.Get(SDEUrl)
 		if err != nil {
-			// Log print and exit with error code
 			fmt.Println("Error downloading SDE")
 			os.Exit(1)
 		}
 		cont, err2 := ioutil.ReadAll(res.Body)
 		err3 := ioutil.WriteFile(SDEFile+".zip", cont, 0777)
 		if err2 != nil || err3 != nil {
-			// Log print and exit with error code
 			fmt.Println("Error saving SDE zip to disk")
 			os.Exit(1)
 		}
@@ -34,7 +32,6 @@ func checkfile() {
 		data, err6 := ioutil.ReadAll(reader)
 		err7 := ioutil.WriteFile(SDEFile, data, 0777)
 		if err5 != nil || err6 != nil || err7 != nil {
-			// Log print and exit with error code
 			fmt.Println("Error writing file ", err5.Error(), err6.Error(), err7.Error())
 			os.Exit(1)
 		}
