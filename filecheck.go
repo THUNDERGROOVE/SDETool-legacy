@@ -10,6 +10,7 @@ import (
 	"os"
 )
 
+// Used to make sure we have our SDEFile and if not we get it ourselves.
 func checkfile() {
 	if _, err := os.Stat(SDEFile); os.IsNotExist(err) {
 		fmt.Println("Downloading SDE (~1.8MB)")
