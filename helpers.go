@@ -55,6 +55,7 @@ func (t *SDEType) IsConsumable() bool {
 	return false
 }
 
+// Returns a types Catagory TypeID
 func (t *SDEType) Category() int {
 	c, err := strconv.Atoi(t.Attributes["categoryID"])
 	if err != nil {
@@ -63,6 +64,7 @@ func (t *SDEType) Category() int {
 	return c
 }
 
+// Generic function to print the info of an SDEType
 func (t *SDEType) PrintInfo() {
 	fmt.Println("Getting stats on " + t.GetName())
 	if t.GetDescription() != "" {
