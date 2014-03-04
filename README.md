@@ -9,7 +9,7 @@ Highly unoptimized however it should be fairly stable.
 
 Building
 ========
-You need [Go](http://golang.org) with your GOPATH enviroment variable setup
+You need [Go](http://golang.org) with your GOPATH environment variable setup
 Our dependencies
 ```
 go get github.com/mattn/go-sqlite3
