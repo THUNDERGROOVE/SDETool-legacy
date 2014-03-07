@@ -1,8 +1,8 @@
 package main
 
 import (
-	"SDETool/category"
 	"fmt"
+	"github.com/THUNDERGROOVE/SDETool/category"
 	"strconv"
 )
 

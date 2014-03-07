@@ -29,7 +29,7 @@ func init() {
 	SearchFlag = flag.String("s", "", "Search for TypeIDs")
 	InfoFlag = flag.Int("i", 0, "Get info with TypeID")
 	VerboseInfo = flag.Bool("vi", false, "Prints all attributes when used with -i")
-
+	// Damage and mod counts
 	Damage = flag.Int("d", 0, "Get damage calculations, takes a TypeID")
 	ComplexModCount = flag.Int("c", 0, "Amount of complex damage mods, used with -d")
 	EnhancedModCount = flag.Int("e", 0, "Amount of enhanced damage mods, used with -d")

@@ -20,8 +20,9 @@ func StackingMultiplier(n int) float64 {
 }
 
 // Returns raw damages with prof and damage mods taken into account
-// Doesn't work on swarms or anything that gets damage from it's projectile
+// Doesn't work on swarms or anything that gets damage from it's projectile __yet__
 func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, BasicModCount int) float64 {
+	// Slice of ints, used to pass all the damage modifier values to GenericCalculateValue
 	m := []int{}
 	for i := 0; i < ComplexModCount; i++ {
 		m = append(m, 10)
@@ -35,7 +36,7 @@ func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, Basic
 	v, err := t.GenericCalculateValue("mFireMode0.instantHitDamage", true, []int{ProfLvl * 3}, m)
 	if err != nil {
 		fmt.Println(err.Error())
-		return float64(-1)
+		return float64(-1) // Obvious error, don't see the need to have this method return an error at this time
 	}
 	return v
 }
