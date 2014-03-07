@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// Returns a string of spaces with the amount x
+// xspaces returns a string of spaces with a length of x
 func xspaces(x int) string {
 	var t string
 	for i := 0; i < x; i++ {
@@ -15,6 +15,7 @@ func xspaces(x int) string {
 	return t
 }
 
+// HasTag returns true if an SDEType contains a tag by TypeID
 func (t *SDEType) HasTag(tag int) bool {
 	for _, c := range t.Tags {
 		if tag == c {
@@ -24,7 +25,7 @@ func (t *SDEType) HasTag(tag int) bool {
 	return false
 }
 
-// Returns mDisplayName
+// GetName returns mDisplayName
 func (t *SDEType) GetName() string {
 	if t.Attributes["mDisplayName"] == "" {
 		return GetTypeName(t.TypeID)
@@ -32,22 +33,22 @@ func (t *SDEType) GetName() string {
 	return t.Attributes["mDisplayName"]
 }
 
-// Returns mDescription
+// GetDescription returns mDescription
 func (t *SDEType) GetDescription() string {
 	return t.Attributes["mDescription"]
 }
 
-// Returns Short Description
+// GetShortDescription returns Short Description
 func (t *SDEType) GetShortDescription() string {
 	return t.Attributes["mShortDescription"]
 }
 
-// Returns price
+// GetPrice returns price
 func (t *SDEType) GetPrice() string {
 	return t.Attributes["basePrice"]
 }
 
-// Is consumable?
+// IsConsumable returns if a SDEType is consumable
 func (t *SDEType) IsConsumable() bool {
 	if t.Attributes["consumable"] == "True" {
 		return true
@@ -55,7 +56,7 @@ func (t *SDEType) IsConsumable() bool {
 	return false
 }
 
-// Returns a types Catagory TypeID
+// Category returns a types Category TypeID
 func (t *SDEType) Category() int {
 	c, err := strconv.Atoi(t.Attributes["categoryID"])
 	if err != nil {
@@ -64,7 +65,7 @@ func (t *SDEType) Category() int {
 	return c
 }
 
-// Generic function to print the info of an SDEType
+// PrintInfo is a generic function to print the info of an SDEType
 func (t *SDEType) PrintInfo() {
 	fmt.Println("Getting stats on " + t.GetName())
 	if t.GetDescription() != "" {

@@ -6,22 +6,21 @@ import (
 )
 
 const (
-	SDEFile = "dustSDE.db"
-	SDEUrl  = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.7_674383.zip"
+	SDEFile = "dustSDE.db"                                                           // Name for the SDE database file to be used
+	SDEUrl  = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.7_674383.zip" // URL to download the SDE
 )
 
 var (
-	// Single commands
-	SearchFlag  *string
-	InfoFlag    *int
-	VerboseInfo *bool
+	SearchFlag  *string // SearchFlag is used to provide a string to search for types
+	InfoFlag    *int    // InfoFlag is used to provide an int to display info about a type
+	VerboseInfo *bool   // If our info should print as much data about a type that we can
 
 	// Damage calculations
-	Damage           *int
-	ComplexModCount  *int
-	EnhancedModCount *int
-	BasicModCount    *int
-	Prof             *int
+	Damage           *int // Damage is used to provide a TypeID to calculate damage of a weapon
+	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
+	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
+	BasicModCount    *int // BasicModCount is used to calculate how many Basic mods to use
+	Prof             *int // Prof is how many levels of proficiency used when calculating damage
 )
 
 func init() {

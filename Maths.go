@@ -8,7 +8,7 @@ import (
 
 // Methods for figureing out damages
 
-// Returns the multiplier to apply to a value when stacking
+// StackingMultiplier returns the multiplier to apply to a value when stacking
 // S(n) = 0.5^[((n-1) / 2.22292081) ^2]
 func StackingMultiplier(n int) float64 {
 	// Written out so it makes sense to me.
@@ -19,7 +19,7 @@ func StackingMultiplier(n int) float64 {
 	return d
 }
 
-// Returns raw damages with prof and damage mods taken into account
+// GetRawDamage returns raw damages with prof and damage mods taken into account
 // Doesn't work on swarms or anything that gets damage from it's projectile __yet__
 func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, BasicModCount int) float64 {
 	// Slice of ints, used to pass all the damage modifier values to GenericCalculateValue
@@ -41,7 +41,7 @@ func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, Basic
 	return v
 }
 
-// Returns a float64 of a generic value calculated from various variables
+// GenericCalculateValue returns a float64 of a generic value calculated from various variables
 // You can pass a slice of int slices of values to calculate, each slice
 // within that slices' values will do stacking penalties
 // HighOrLow should be set, true = high, false = low

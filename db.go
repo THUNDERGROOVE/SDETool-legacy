@@ -9,6 +9,8 @@ import (
 
 var db *sql.DB
 
+// SDEType is used to help manipulate and look up information about a particular type
+// in the SDE
 type SDEType struct {
 	TypeID         int
 	TypeName       string
@@ -24,7 +26,7 @@ type SDEType struct {
 	Sidearms       int
 }
 
-// Call to initialize the SDE
+// DBInitialze is used to to initialize the SDE database file
 func DBInitialize() {
 	var err error
 	db, err = sql.Open("sqlite3", SDEFile)
@@ -34,7 +36,7 @@ func DBInitialize() {
 	}
 }
 
-// Returns an SDEType by typeID
+// GetSDETypeID returns an SDEType by typeID
 func GetSDETypeID(TID int) SDEType {
 	// Get ID
 	var err error
@@ -93,6 +95,7 @@ func GetSDETypeID(TID int) SDEType {
 	return sde
 }
 
+// GetSDEWhereNameContains returns a slice of SDETypes whose mDisplayName contains name
 func GetSDEWhereNameContains(name string) []SDEType {
 	var typelist []SDEType
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE catmaAttributeName == 'mDisplayName' AND catmaValueText LIKE '%" + name + "%'")
@@ -119,6 +122,7 @@ func GetSDEWhereNameContains(name string) []SDEType {
 	return typelist
 }
 
+// GetTypeName returns the name of a type when given a TypeID
 func GetTypeName(typeID int) string {
 	rows, err := db.Query("SELECT * FROM CatmaTypes WHERE typeID == " + strconv.Itoa(typeID))
 	if err != nil {
@@ -135,6 +139,7 @@ func GetTypeName(typeID int) string {
 	return typeName
 }
 
+// _GetTags is a helper function to apply the tags of a type to an SDEType
 func (t *SDEType) _GetTags() {
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(t.TypeID) + " AND catmaAttributeName LIKE 'tag.%'")
 	if err != nil {
@@ -158,6 +163,8 @@ func (t *SDEType) _GetTags() {
 		t.Tags = append(t.Tags, s)
 	}
 }
+
+// _GetModules is a helper function to add the module counts to an SDEType
 func (t *SDEType) _GetModules() {
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(t.TypeID) + " AND catmaAttributeName LIKE 'mModuleSlots.%'")
 	if err != nil {
