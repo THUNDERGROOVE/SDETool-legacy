@@ -6,14 +6,19 @@ import (
 )
 
 const (
+	// Constants
 	SDEFile = "dustSDE.db"                                                           // Name for the SDE database file to be used
 	SDEUrl  = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.7_674383.zip" // URL to download the SDE
+	Version = 0.1                                                                    // Sounds right :P
 )
 
 var (
+	// Flag variables
 	SearchFlag  *string // SearchFlag is used to provide a string to search for types
 	InfoFlag    *int    // InfoFlag is used to provide an int to display info about a type
 	VerboseInfo *bool   // If our info should print as much data about a type that we can
+	LicenseFlag *bool   // Print Licensing information
+	VersionFlag *bool
 
 	// Damage calculations
 	Damage           *int // Damage is used to provide a TypeID to calculate damage of a weapon
@@ -28,6 +33,9 @@ func init() {
 	SearchFlag = flag.String("s", "", "Search for TypeIDs")
 	InfoFlag = flag.Int("i", 0, "Get info with TypeID")
 	VerboseInfo = flag.Bool("vi", false, "Prints all attributes when used with -i")
+	LicenseFlag = flag.Bool("l", false, "Prints license information.")
+	VersionFlag = flag.Bool("version", false, "Prints the SDETool version")
+
 	// Damage and mod counts
 	Damage = flag.Int("d", 0, "Get damage calculations, takes a TypeID")
 	ComplexModCount = flag.Int("c", 0, "Amount of complex damage mods, used with -d")
@@ -40,7 +48,12 @@ func init() {
 func main() {
 	checkfile()
 	DBInitialize()
-	if *SearchFlag != "" {
+	// Change to select switch?
+	if *LicenseFlag {
+		PrintLicense()
+	} else if *VersionFlag {
+		fmt.Println("SDETool version", Version)
+	} else if *SearchFlag != "" {
 		fmt.Println("Searching value: '" + *SearchFlag + "'")
 		k := GetSDEWhereNameContains(*SearchFlag)
 		for _, c := range k {
@@ -66,7 +79,6 @@ func main() {
 		if *BasicModCount != 0 {
 			fmt.Println("->", *BasicModCount, "Complex damage modifiers")
 		}
-
 	} else {
 		flag.PrintDefaults()
 	}

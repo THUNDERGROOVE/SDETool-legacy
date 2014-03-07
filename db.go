@@ -26,7 +26,7 @@ type SDEType struct {
 	Sidearms       int
 }
 
-// DBInitialze is used to to initialize the SDE database file
+// DBInitialize is used to to initialize the SDE database file
 func DBInitialize() {
 	var err error
 	db, err = sql.Open("sqlite3", SDEFile)

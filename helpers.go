@@ -6,6 +6,10 @@ import (
 	"strconv"
 )
 
+const (
+	sqlliteDriver = `SDETool uses an SQLite3 driver to deal with the SDE database from https://github.com/mattn/go-sqlite3, see http://mattn.mit-license.org/2012 for licensing`
+)
+
 // xspaces returns a string of spaces with a length of x
 func xspaces(x int) string {
 	var t string
@@ -107,4 +111,10 @@ func (t *SDEType) PrintInfo() {
 			fmt.Println("No attributes to show")
 		}
 	}
+}
+
+// PrintLicense is a simple function to just print our licensing for everything
+func PrintLicense() {
+	fmt.Println("SDETool is under the MIT license.  See LICENSE for more info")
+	fmt.Println(sqlliteDriver)
 }

@@ -1,3 +1,7 @@
+/*
+	The package category is only used to store hardcoded TypeIDs of various types
+*/
+
 package category
 
 const (
