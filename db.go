@@ -37,6 +37,7 @@ func DBInitialize() {
 }
 
 // GetSDETypeID returns an SDEType by typeID
+// Currently bottlenecking our GetSDEWhereNameContains takes ~ 300 ms to execute
 func GetSDETypeID(TID int) SDEType {
 	// Get ID
 	var err error
@@ -95,10 +96,68 @@ func GetSDETypeID(TID int) SDEType {
 	return sde
 }
 
+// GetSDETypeIDFast returns an SDEType by typeID
+// Doesn't get tag or module info use when you just need base info
+func GetSDETypeIDFast(TID int) SDEType {
+	// Get ID
+	var err error
+	rows, err := db.Query("SELECT * FROM CatmaTypes WHERE typeID == " + strconv.Itoa(TID))
+	if err != nil {
+		fmt.Println(err.Error())
+		return SDEType{}
+	}
+	var typeID int
+	var typeName string
+	rows.Next()
+	err = rows.Scan(&typeID, &typeName)
+	if err != nil {
+		fmt.Println("Error getting type by TypeID", err.Error())
+		return SDEType{}
+	}
+	sde := SDEType{}
+	sde.TypeID = typeID
+	sde.TypeName = typeName
+	sde.Attributes = make(map[string]string)
+
+	// Get attributes
+	rows, err = db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(typeID) + " AND catmaAttributeName == 'mDisplayName'")
+	if err != nil {
+		fmt.Println("SELECT * FROM CatmaAttributes WHERE typeID == "+string(typeID)+"\n", err.Error())
+		return SDEType{}
+	}
+	for rows.Next() {
+		var nTypeID int
+		var catmaAttributeName string
+		var catmaValueInt string
+		var catmaValueReal string
+
+		var catmaValueText string
+
+		err := rows.Scan(&nTypeID, &catmaAttributeName, &catmaValueInt, &catmaValueReal, &catmaValueText)
+
+		if err != nil {
+			fmt.Println("Error parsing attribute\n\t", err.Error())
+			continue
+		}
+
+		if catmaValueInt != "None" {
+			sde.Attributes[catmaAttributeName] = string(catmaValueInt)
+		}
+		if catmaValueReal != "None" {
+			sde.Attributes[catmaAttributeName] = string(catmaValueReal)
+		}
+		if catmaValueText != "None" {
+			sde.Attributes[catmaAttributeName] = string(catmaValueText)
+		}
+
+	}
+	return sde
+}
+
 // GetSDEWhereNameContains returns a slice of SDETypes whose mDisplayName contains name
 func GetSDEWhereNameContains(name string) []SDEType {
 	var typelist []SDEType
-	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE catmaAttributeName == 'mDisplayName' AND catmaValueText LIKE '%" + name + "%'")
+	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE catmaValueText LIKE '%" + name + "%' AND catmaAttributeName == 'mDisplayName'")
 	if err != nil {
 		fmt.Println(err.Error())
 		return []SDEType{}
@@ -117,7 +176,7 @@ func GetSDEWhereNameContains(name string) []SDEType {
 			continue
 		}
 
-		typelist = append(typelist, GetSDETypeID(nTypeID))
+		typelist = append(typelist, GetSDETypeIDFast(nTypeID))
 	}
 	return typelist
 }
@@ -140,6 +199,7 @@ func GetTypeName(typeID int) string {
 }
 
 // _GetTags is a helper function to apply the tags of a type to an SDEType
+// Bottlenecking, 100ms execution time
 func (t *SDEType) _GetTags() {
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(t.TypeID) + " AND catmaAttributeName LIKE 'tag.%'")
 	if err != nil {
@@ -165,6 +225,7 @@ func (t *SDEType) _GetTags() {
 }
 
 // _GetModules is a helper function to add the module counts to an SDEType
+// Bottlenecking, 100ms execution time
 func (t *SDEType) _GetModules() {
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(t.TypeID) + " AND catmaAttributeName LIKE 'mModuleSlots.%'")
 	if err != nil {

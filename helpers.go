@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
 	"strconv"
+	"time"
 )
 
 const (
@@ -117,4 +118,10 @@ func (t *SDEType) PrintInfo() {
 func PrintLicense() {
 	fmt.Println("SDETool is under the MIT license.  See LICENSE for more info")
 	fmt.Println(sqlliteDriver)
+}
+
+// Used to measure execuation time of a function, use with defer
+func timeFunction(start time.Time, name string) {
+	elapsed := time.Since(start)
+	fmt.Printf("%s took %s\n", name, elapsed)
 }

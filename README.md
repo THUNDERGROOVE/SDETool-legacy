@@ -77,12 +77,9 @@ It will display a 64 bit float which should go out to 16(?) decimal places
 
 TODO
 ====
-Use SQLite indexes for:
-``` SQLite
-"SELECT * FROM CatmaAttributes WHERE catmaAttributeName == 'mDisplayName' AND catmaValueText LIKE '%" + name + "%'"
-```
-Can take a really long time to get very vague things like "combat", "rail", etc..
 
-More input types for -i use the typeName and display name to lookup with the best match working?
+Can take a really long time to get very vague things like "combat", "rail", etc.. (Did some changes and got ~70% faster searches on high count returns, still takes longer than I want but I still want to get our display name)
 
-More calculations like damage for things like dampening, range amps, speed, etc.
+More input types for -i use the typeName and display name to lookup with the best match working? 
+
+More calculations like damage for things like dampening, range amps, speed, etc.(Implemented GenericCalculateValue, should make it easier when I get to it)
