@@ -101,6 +101,8 @@ func (t *SDEType) PrintInfo() {
 		fmt.Println("===== Vehicle =====")
 		fmt.Println("-> High slots:", t.HighModules)
 		fmt.Println("-> Low slots:", t.LowModules)
+		fmt.Println("-> Large Turrets:", t.LargeTurrets)
+		fmt.Println("-> Small Turrets:", t.SmallTurrets)
 	}
 	if len(t.Tags) > 0 {
 
