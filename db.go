@@ -7,7 +7,9 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"github.com/THUNDERGROOVE/SDETool/util"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -341,6 +343,7 @@ func GetSDEWhereNameContainsFastC(name string) []SDEType {
 
 // GetTypeName returns the name of a type when given a TypeID
 func GetTypeName(typeID int) string {
+	defer timeFunction(time.Now(), "GetTypeName("+strconv.Itoa(typeID)+")")
 	rows, err := db.Query("SELECT * FROM CatmaTypes WHERE typeID == " + strconv.Itoa(typeID))
 	if err != nil {
 		fmt.Println(err.Error())
@@ -354,6 +357,55 @@ func GetTypeName(typeID int) string {
 		return ""
 	}
 	return typeName
+}
+
+// GetTypeIDByName returns the TypeID of a type when given a typeName
+func GetTypeIDByName(typeName string) int {
+	defer timeFunction(time.Now(), "GetTypeIDByName("+typeName+")")
+	rows, err := db.Query("SELECT * FROM CatmaTypes WHERE typeName == '" + typeName + "'")
+	if err != nil {
+		if strings.Contains(err.Error(), "no such column") {
+			fmt.Println("Unable to find a type with the name", typeName)
+			os.Exit(1)
+		}
+		return 0
+	}
+	var typeID int
+	rows.Next()
+	err = rows.Scan(&typeID, &typeName)
+	if err != nil {
+		fmt.Println("Error getting type by TypeID", err.Error())
+		return 0
+	}
+	return typeID
+}
+
+func GetTypeIDByDName(name string) int {
+	defer timeFunction(time.Now(), "GetTypeIDByDName("+name+")")
+	pmatches := make(map[int]string)
+	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE catmaAttributeName == 'mDisplayName' AND catmaValueText LIKE '%" + name + "%'")
+	if err != nil {
+		fmt.Println("Error getting type by display name", err.Error())
+		return 0
+	}
+	for rows.Next() {
+
+		var nTypeID int
+		var catmaAttributeName string
+		var catmaValueInt string
+		var catmaValueReal string
+
+		var catmaValueText string
+
+		err = rows.Scan(&nTypeID, &catmaAttributeName, &catmaValueInt, &catmaValueReal, &catmaValueText)
+		if err != nil {
+			fmt.Println("Error parsing attribute\n\t", err.Error())
+			return 0
+		}
+		pmatches[nTypeID] = catmaValueText
+	}
+	k := util.FuzzySearch(pmatches, name)
+	return k
 }
 
 // _GetTags is a helper function to apply the tags of a type to an SDEType

@@ -15,7 +15,7 @@ const (
 var (
 	// Flag variables
 	SearchFlag    *string // SearchFlag is used to provide a string to search for types
-	InfoFlag      *int    // InfoFlag is used to provide an int to display info about a type
+	InfoFlag      *string // InfoFlag is used to provide an int to display info about a type
 	VerboseInfo   *bool   // If our info should print as much data about a type that we can
 	LicenseFlag   *bool   // Print Licensing information
 	VersionFlag   *bool   // Print current version
@@ -23,17 +23,17 @@ var (
 	TimeExecution *bool   // Should we time our functions?
 
 	// Damage calculations
-	Damage           *int // Damage is used to provide a TypeID to calculate damage of a weapon
-	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
-	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
-	BasicModCount    *int // BasicModCount is used to calculate how many Basic mods to use
-	Prof             *int // Prof is how many levels of proficiency used when calculating damage
+	Damage           *string // Damage is used to provide a TypeID to calculate damage of a weapon
+	ComplexModCount  *int    // ComplexModCount is used to calculate how many Complex mods to use
+	EnhancedModCount *int    // EnhancedModCount is used to calculate how many Enhanced mods to use
+	BasicModCount    *int    // BasicModCount is used to calculate how many Basic mods to use
+	Prof             *int    // Prof is how many levels of proficiency used when calculating damage
 )
 
 func init() {
 	// Flags
 	SearchFlag = flag.String("s", "", "Search for TypeIDs")
-	InfoFlag = flag.Int("i", 0, "Get info with TypeID")
+	InfoFlag = flag.String("i", "", "Get info with a TypeID, typeName or mDisplayName")
 	VerboseInfo = flag.Bool("vi", false, "Prints all attributes when used with -i")
 	LicenseFlag = flag.Bool("l", false, "Prints license information.")
 	VersionFlag = flag.Bool("version", false, "Prints the SDETool version")
@@ -41,7 +41,7 @@ func init() {
 	TimeExecution = flag.Bool("time", false, "Times the execution of functions that may take a decent amount of time")
 
 	// Damage and mod counts
-	Damage = flag.Int("d", 0, "Get damage calculations, takes a TypeID")
+	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")
 	ComplexModCount = flag.Int("c", 0, "Amount of complex damage mods, used with -d")
 	EnhancedModCount = flag.Int("e", 0, "Amount of enhanced damage mods, used with -d")
 	BasicModCount = flag.Int("b", 0, "Amount of enhanced damage mods, used with -d")
@@ -68,11 +68,12 @@ func main() {
 		for _, c := range k {
 			fmt.Println(c.TypeID, "| "+c.GetName())
 		}
-	} else if *InfoFlag != 0 {
-		t := GetSDETypeID(*InfoFlag)
+	} else if *InfoFlag != "" {
+		i := ResolveInput(*InfoFlag)
+		t := GetSDETypeID(i)
 		t.PrintInfo()
-	} else if *Damage != 0 {
-		t := GetSDETypeID(*Damage)
+	} else if *Damage != "" {
+		t := GetSDETypeID(ResolveInput(*Damage))
 		fmt.Println("Getting damage on: " + t.GetName())
 		d := t.GetRawDamage(*Prof, *ComplexModCount, *EnhancedModCount, *BasicModCount)
 		fmt.Println("->", t.GetName(), "would do ", d, "damage")

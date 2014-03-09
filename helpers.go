@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -143,4 +145,30 @@ func longestLen(list map[string]string) int {
 		}
 	}
 	return l
+}
+
+// ResolveInput takes in a string and returns a TypeID.
+// Can take a TypeID, name, display name.  If there are multiple matches
+// we will return the closest match
+func ResolveInput(s string) int {
+	// Check if we have a TypeID
+	b, err := regexp.MatchString("^[0-9]{1,6}$", s)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	if b {
+		i, err := strconv.Atoi(s)
+		if err != nil {
+			fmt.Println(err.Error())
+			return 0
+		}
+		return i
+	}
+	// Check if we have a name
+	if strings.Contains(s, "_") {
+		return GetTypeIDByName(s)
+	} else {
+		return GetTypeIDByDName(s)
+	}
+	return 0
 }

@@ -74,14 +74,12 @@ Currently, we only support getting damage values for weapons that don't get thei
 # Get damage for a Kaalakiota Rail Rifle with 3 complex damage mods and proficiency level 3
 SDETool -d 365448 -c 2 -p 3
 ``` 
-It will display a 64 bit float which should go out to 16(?) decimal places
+It will display a 64 bit float which should go out to 16(?) decimal places.  _This may change_
 
 TODO
 ====
 
-Can take a really long time to get very vague things like "combat", "rail", etc.. (Did some changes and got ~70% faster searches on high count returns, still takes longer than I want but I still want to get our display name)
-
-More input types for -i use the typeName and display name to lookup with the best match working? 
+More input types for -i and -d use the typeName and display name to lookup with the best match working? (Requires that I implement some sort of fuzzy search function that takes a map[int]string of possible matches?)
 
 More calculations like damage for things like dampening, range amps, speed, etc. (Implemented GenericCalculateValue, should make it easier when I get to it)
 
