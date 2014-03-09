@@ -1,3 +1,7 @@
+/*
+	db.go contains all of the methods related to handling the DustSDE database.
+*/
+
 package main
 
 import (
@@ -5,9 +9,13 @@ import (
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"strconv"
+	"strings"
+	"time"
 )
 
-var db *sql.DB
+var (
+	db *sql.DB
+)
 
 // SDEType is used to help manipulate and look up information about a particular type
 // in the SDE
@@ -24,6 +32,12 @@ type SDEType struct {
 	EquipmentSlots int
 	GrenadeSlots   int
 	Sidearms       int
+}
+
+type CatmaAttributeLookup struct {
+	nTypeID            int
+	catmaAttributeName string
+	catmaValue         string
 }
 
 // DBInitialize is used to to initialize the SDE database file
@@ -154,8 +168,31 @@ func GetSDETypeIDFast(TID int) SDEType {
 	return sde
 }
 
+// SearchSDE returns a slice of SDETypes by using either GetSDEWhereNameContains
+// or GetSDEWhereNameContainsFast depending on how many values we _think_ are going
+// to be returned
+func SearchSDE(name string) []SDEType {
+	defer timeFunction(time.Now(), "SearchSDE("+name+")")
+	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE catmaValueText LIKE '%" + name + "%' AND catmaAttributeName == 'mDisplayName'")
+	if err != nil {
+		fmt.Println(err.Error())
+		return []SDEType{}
+	}
+	counter := 0
+	for rows.Next() {
+		counter++
+	}
+	if counter > 16 {
+		return GetSDEWhereNameContainsFast(name)
+	} else {
+		return GetSDEWhereNameContains(name)
+	}
+
+}
+
 // GetSDEWhereNameContains returns a slice of SDETypes whose mDisplayName contains name
 func GetSDEWhereNameContains(name string) []SDEType {
+	defer timeFunction(time.Now(), "GetSDEWhereNameContains("+name+")")
 	var typelist []SDEType
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE catmaValueText LIKE '%" + name + "%' AND catmaAttributeName == 'mDisplayName'")
 	if err != nil {
@@ -177,6 +214,60 @@ func GetSDEWhereNameContains(name string) []SDEType {
 		}
 
 		typelist = append(typelist, GetSDETypeIDFast(nTypeID))
+	}
+	return typelist
+}
+
+// This is meant to be a much faster version of GetSDEWhereNameContains where
+// We cache all of our CatmaAttributes and check that before attempting to
+// attempt a SELECT statement.  Meant to be used for searches where you only
+// need a typeID and mDisplayName.  It's only faster when there are more than
+// ~16 values returned, the larger slice returned the better it is to use this
+// function.
+func GetSDEWhereNameContainsFast(name string) []SDEType {
+	defer timeFunction(time.Now(), "GetSDEWhereNameContainsFast("+name+")")
+	var typelist []SDEType
+	var lookup []CatmaAttributeLookup
+
+	rows, err := db.Query("SELECT * FROM CatmaAttributes")
+	if err != nil {
+		fmt.Println(err.Error())
+		return typelist
+	}
+
+	for rows.Next() {
+		var nTypeID int
+		var catmaAttributeName string
+		var catmaValueInt string
+		var catmaValueReal string
+		var catmaValueText string
+
+		var catmaValue string
+
+		err := rows.Scan(&nTypeID, &catmaAttributeName, &catmaValueInt, &catmaValueReal, &catmaValueText)
+
+		if err != nil {
+			fmt.Println("Error parsing attribute\n\t", err.Error())
+			continue
+		}
+		if catmaValueInt != "None" {
+			catmaValue = catmaValueInt
+		} else if catmaValueReal != "None" {
+			catmaValue = catmaValueReal
+		} else if catmaValueText != "None" {
+			catmaValue = catmaValueText
+		}
+		lookup = append(lookup, CatmaAttributeLookup{nTypeID, catmaAttributeName, catmaValue})
+	}
+
+	for _, v := range lookup {
+		if v.catmaAttributeName == "mDisplayName" && strings.Contains(strings.ToLower(v.catmaValue), strings.ToLower(name)) {
+			temp := SDEType{}
+			temp.TypeID = v.nTypeID
+			temp.Attributes = make(map[string]string)
+			temp.Attributes["mDisplayName"] = v.catmaValue
+			typelist = append(typelist, temp)
+		}
 	}
 	return typelist
 }

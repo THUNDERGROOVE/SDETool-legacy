@@ -9,16 +9,18 @@ const (
 	// Constants
 	SDEFile = "dustSDE.db"                                                           // Name for the SDE database file to be used
 	SDEUrl  = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.7_674383.zip" // URL to download the SDE
-	Version = 0.1                                                                    // Sounds right :P
+	Version = 0.2                                                                    // Sounds right :P
 )
 
 var (
 	// Flag variables
-	SearchFlag  *string // SearchFlag is used to provide a string to search for types
-	InfoFlag    *int    // InfoFlag is used to provide an int to display info about a type
-	VerboseInfo *bool   // If our info should print as much data about a type that we can
-	LicenseFlag *bool   // Print Licensing information
-	VersionFlag *bool
+	SearchFlag    *string // SearchFlag is used to provide a string to search for types
+	InfoFlag      *int    // InfoFlag is used to provide an int to display info about a type
+	VerboseInfo   *bool   // If our info should print as much data about a type that we can
+	LicenseFlag   *bool   // Print Licensing information
+	VersionFlag   *bool   // Print current version
+	SlowFlag      *bool   // Don't use optimizations
+	TimeExecution *bool   // Should we time our functions?
 
 	// Damage calculations
 	Damage           *int // Damage is used to provide a TypeID to calculate damage of a weapon
@@ -35,6 +37,8 @@ func init() {
 	VerboseInfo = flag.Bool("vi", false, "Prints all attributes when used with -i")
 	LicenseFlag = flag.Bool("l", false, "Prints license information.")
 	VersionFlag = flag.Bool("version", false, "Prints the SDETool version")
+	SlowFlag = flag.Bool("slow", false, "Forces the use of unoptimized functions")
+	TimeExecution = flag.Bool("time", false, "Times the execution of functions that may take a decent amount of time")
 
 	// Damage and mod counts
 	Damage = flag.Int("d", 0, "Get damage calculations, takes a TypeID")
@@ -55,7 +59,12 @@ func main() {
 		fmt.Println("SDETool version", Version)
 	} else if *SearchFlag != "" {
 		fmt.Println("Searching value: '" + *SearchFlag + "'")
-		k := GetSDEWhereNameContains(*SearchFlag)
+		k := []SDEType{}
+		if *SlowFlag {
+			k = GetSDEWhereNameContains(*SearchFlag)
+		} else {
+			k = SearchSDE(*SearchFlag)
+		}
 		for _, c := range k {
 			fmt.Println(c.TypeID, "| "+c.GetName())
 		}

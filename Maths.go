@@ -1,3 +1,7 @@
+/*
+	Maths.go provides helpers for calculating various things
+*/
+
 package main
 
 import (

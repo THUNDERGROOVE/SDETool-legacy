@@ -3,7 +3,7 @@ SDETool
 
 Uses the Dust514 **S**tatic **D**ata **E**xport to poll for info.
 
-Highly unoptimized however it should be fairly stable.
+Highly unoptimized for now however it should be fairly stable(hopefully).
 
 [![Gobuild Download](http://gobuild.io/badge/github.com/THUNDERGROOVE/SDETool/download.png)](http://gobuild.io/github.com/THUNDERGROOVE/SDETool)
 
@@ -19,6 +19,8 @@ Then you should be able to
 make
 ```
 And have your SDETool.exe or SDETool binary!
+
+If you have any issues building just submit an issue and I'll do my best sorting it out however it should work on any officially supported platform.  Currently I test it in Windows 8.1 and Debian testing.
 
 Usage
 =====
@@ -53,7 +55,7 @@ The Logistics dropsuit is outfitted with the latest in integrated diagnostic tec
 The Amarr variant is a durable, combat-focused suit that provides above-average protection, allowing logistic units to operate in the middle of a firefight, actively dispersing aid and support as needed while simultaneously engaging the enemy and inflicting trauma of its own.
 
 When deployed, a soldier equipped with a Logistics suit fills a vital tactical role in small unit operations and full-scale warfare, providing both, medical and mechanical support.
--> Costs 57690 ISK
+-> Cost 57690 ISK
 ===== Dropsuit =====
 -> Heavy Weapons: 0
 -> Light Weapons: 1
@@ -84,4 +86,4 @@ More input types for -i use the typeName and display name to lookup with the bes
 
 More calculations like damage for things like dampening, range amps, speed, etc. (Implemented GenericCalculateValue, should make it easier when I get to it)
 
-Some key value cache type system for things like ```cache[TypeID] = mDisplayName``` for faster searches
+I'm currently working on implementing a faster way of using the -s flag.  It takes about 0.1 seconds for each type that matches our search pattern so when we have > 30 items it takes a long time to return a result.  Will be using fewer SQL querries and possible GoRoutines and channels to get results back faster.

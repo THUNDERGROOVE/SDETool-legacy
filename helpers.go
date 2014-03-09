@@ -123,5 +123,7 @@ func PrintLicense() {
 // Used to measure execuation time of a function, use with defer
 func timeFunction(start time.Time, name string) {
 	elapsed := time.Since(start)
-	fmt.Printf("%s took %s\n", name, elapsed)
+	if *TimeExecution {
+		fmt.Printf("%s took %s\n", name, elapsed)
+	}
 }
