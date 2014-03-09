@@ -103,10 +103,16 @@ func (t *SDEType) PrintInfo() {
 		}
 	}
 	if *VerboseInfo == true {
+		l := longestLen(t.Attributes)
+		fmt.Println(l)
 		if len(t.Attributes) > 0 {
 			fmt.Println("===== Attributes =====:")
 			for k, v := range t.Attributes {
-				fmt.Println(k + " | " + v)
+				// Don't print descriptions
+				if k == "mDescription" || k == "mShortDescription" {
+					continue
+				}
+				fmt.Println(k + xspaces(longestLen(t.Attributes)-len(k)) + " | " + v)
 			}
 		} else {
 			fmt.Println("No attributes to show")
@@ -126,4 +132,15 @@ func timeFunction(start time.Time, name string) {
 	if *TimeExecution {
 		fmt.Printf("%s took %s\n", name, elapsed)
 	}
+}
+
+// longestLen returns the length of the longest string in list
+func longestLen(list map[string]string) int {
+	l := 0
+	for v := range list {
+		if len(v) > l {
+			l = len(v)
+		}
+	}
+	return l
 }
