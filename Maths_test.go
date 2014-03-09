@@ -41,3 +41,16 @@ func TestStackingMultiplier(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkStackingMultipler(b *testing.B) {
+	b.Log("Calculating 1000 stacking multipliers")
+	for i := 0; i < 1000; i++ {
+		_ = StackingMultiplier(i)
+	}
+}
+
+func TestGetRawDamage(t *testing.T) {
+	DBInitialize()
+	th := GetSDETypeID(category.Thale)
+	t.Log("Damage for", th.GetName(), th.GetRawDamage(3, 0, 0, 0))
+}
