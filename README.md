@@ -40,7 +40,7 @@ Searching value: 'Logistics ak.0'
 
 useful for getting typeIDs
 
-```
+``` bash
 SDETool -i 364035
 # or
 SDETool -i "Logistics ak.0"
