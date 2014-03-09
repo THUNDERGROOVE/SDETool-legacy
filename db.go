@@ -34,6 +34,8 @@ type SDEType struct {
 	EquipmentSlots int
 	GrenadeSlots   int
 	Sidearms       int
+	LargeTurrets   int
+	SmallTurrets   int
 }
 
 type CatmaAttributeLookup struct {
@@ -55,6 +57,10 @@ func DBInitialize() {
 // GetSDETypeID returns an SDEType by typeID
 // Currently bottlenecking our GetSDEWhereNameContains takes ~ 300 ms to execute
 func GetSDETypeID(TID int) SDEType {
+	if TID == 0 {
+		fmt.Println("Unable to find type by ID type lookup failed, make sure the name provided actually exists")
+		os.Exit(1)
+	}
 	// Get ID
 	var err error
 	rows, err := db.Query("SELECT * FROM CatmaTypes WHERE typeID == " + strconv.Itoa(TID))
@@ -67,7 +73,7 @@ func GetSDETypeID(TID int) SDEType {
 	rows.Next()
 	err = rows.Scan(&typeID, &typeName)
 	if err != nil {
-		fmt.Println("Error getting type by TypeID", err.Error())
+		fmt.Println("Error getting type by TypeID, GetSDETypeID("+strconv.Itoa(TID)+")", err.Error())
 		return SDEType{}
 	}
 	sde := SDEType{}
@@ -127,7 +133,7 @@ func GetSDETypeIDFast(TID int) SDEType {
 	rows.Next()
 	err = rows.Scan(&typeID, &typeName)
 	if err != nil {
-		fmt.Println("Error getting type by TypeID", err.Error())
+		fmt.Println("Error getting type by TypeID, GetSDETypeIDFast("+strconv.Itoa(TID)+")", err.Error())
 		return SDEType{}
 	}
 	sde := SDEType{}
@@ -353,7 +359,7 @@ func GetTypeName(typeID int) string {
 	rows.Next()
 	err = rows.Scan(&typeID, &typeName)
 	if err != nil {
-		fmt.Println("Error getting type by TypeID", err.Error())
+		fmt.Println("Error getting type name from TypeID, GetTypeName("+strconv.Itoa(typeID)+")", err.Error())
 		return ""
 	}
 	return typeName
@@ -374,7 +380,7 @@ func GetTypeIDByName(typeName string) int {
 	rows.Next()
 	err = rows.Scan(&typeID, &typeName)
 	if err != nil {
-		fmt.Println("Error getting type by TypeID", err.Error())
+		fmt.Println("Error getting type by TypeID, GetTypeIDByName("+typeName+")", err.Error())
 		return 0
 	}
 	return typeID
@@ -460,6 +466,10 @@ func (t *SDEType) _GetModules() {
 			t.LowModules++
 		case "IH":
 			t.HighModules++
+		case "VH":
+			t.HighModules++
+		case "VL":
+			t.LowModules++
 		case "GM":
 			t.GrenadeSlots++
 		case "IE":
@@ -468,6 +478,40 @@ func (t *SDEType) _GetModules() {
 			t.LightWeapons++
 		case "WS":
 			t.Sidearms++
+		case "TL":
+			t.LargeTurrets++
+		case "TS":
+			t.SmallTurrets++
+		}
+	}
+	// Remove hidden slots
+	for k, _ := range t.Attributes {
+		if strings.Contains(k, "mModuleSlots") && strings.Contains(k, "slotType") {
+			curSlot := strings.Split(k, ".")[1] // Hope no index issues
+			if t.Attributes["mModuleSlots."+curSlot+".visible"] == "False" {
+				switch t.Attributes["mModuleSlots."+curSlot+".slotType"] {
+				case "IL":
+					t.LowModules--
+				case "IH":
+					t.HighModules--
+				case "VH":
+					t.HighModules--
+				case "VL":
+					t.LowModules--
+				case "GM":
+					t.GrenadeSlots--
+				case "IE":
+					t.EquipmentSlots--
+				case "WP":
+					t.LightWeapons--
+				case "WS":
+					t.Sidearms--
+				case "TL":
+					t.LargeTurrets--
+				case "TS":
+					t.SmallTurrets--
+				}
+			}
 		}
 	}
 }

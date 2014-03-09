@@ -24,7 +24,7 @@ If you have any issues building just submit an issue and I'll do my best sorting
 Usage
 =====
 
-```
+``` bash
 SDETool -s "Logistics ak.0"
 ```
 

@@ -97,6 +97,11 @@ func (t *SDEType) PrintInfo() {
 		fmt.Println("-> Low slots:", t.LowModules)
 
 	}
+	if t.HasTag(category.TagVehicle) {
+		fmt.Println("===== Vehicle =====")
+		fmt.Println("-> High slots:", t.HighModules)
+		fmt.Println("-> Low slots:", t.LowModules)
+	}
 	if len(t.Tags) > 0 {
 
 		fmt.Println("===== Tags =====")

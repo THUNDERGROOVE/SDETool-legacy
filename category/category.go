@@ -8,6 +8,7 @@ const (
 	TagHandheld   = 364904
 	TagEquipment  = 352347
 	TagDropsuit   = 353508
+	TagVehicle    = 352333
 
 	// Weapons for testing things
 	SniperRifle   = 352556
