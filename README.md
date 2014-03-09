@@ -42,6 +42,8 @@ useful for getting typeIDs
 
 ```
 SDETool -i 364035
+# or
+SDETool -i "Logistics ak.0"
 ```
 
 returns something like
@@ -73,6 +75,10 @@ Currently, we only support getting damage values for weapons that don't get thei
 ``` bash
 # Get damage for a Kaalakiota Rail Rifle with 3 complex damage mods and proficiency level 3
 SDETool -d 365448 -c 2 -p 3
+# You can also do things like
+SDETool -d "kaalakiota rail rifle" -c 2 -p 3
+# or
+SDETool -d wpn_railrifle_ca_pro -c 2 -p 3
 ``` 
 It will display a 64 bit float which should go out to 16(?) decimal places.  _This may change_
 
