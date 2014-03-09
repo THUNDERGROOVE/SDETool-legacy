@@ -85,4 +85,4 @@ More input types for -i use the typeName and display name to lookup with the bes
 
 More calculations like damage for things like dampening, range amps, speed, etc. (Implemented GenericCalculateValue, should make it easier when I get to it)
 
-I'm currently working on implementing a faster way of using the -s flag.  It takes about 0.1 seconds for each type that matches our search pattern so when we have > 30 items it takes a long time to return a result.  Will be using fewer SQL querries and possible GoRoutines and channels to get results back faster.
+<del>I'm currently working on implementing a faster way of using the -s flag.  It takes about 0.1 seconds for each type that matches our search pattern so when we have > 30 items it takes a long time to return a result.  Will be using fewer SQL querries and possible GoRoutines and channels to get results back faster.</del> Mostly done, would still like faster searches
