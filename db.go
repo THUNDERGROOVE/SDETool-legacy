@@ -183,7 +183,7 @@ func SearchSDE(name string) []SDEType {
 		counter++
 	}
 	if counter > 16 {
-		return GetSDEWhereNameContainsFast(name)
+		return GetSDEWhereNameContainsFastC(name)
 	} else {
 		return GetSDEWhereNameContains(name)
 	}
@@ -269,6 +269,73 @@ func GetSDEWhereNameContainsFast(name string) []SDEType {
 			typelist = append(typelist, temp)
 		}
 	}
+	return typelist
+}
+
+// This is meant to be a much faster version of GetSDEWhereNameContainsFast
+// however we use GoRoutines and channels to _hopefully_ speed up proccessing
+// of our query.  Saves ~0.2 seconds on SDETool -s rail :D
+func GetSDEWhereNameContainsFastC(name string) []SDEType {
+	defer timeFunction(time.Now(), "GetSDEWhereNameContainsFastC("+name+")")
+	var typelist []SDEType
+	var lookup []CatmaAttributeLookup
+	SDETypeChan := make(chan SDEType)
+	breakr := false
+
+	rows, err := db.Query("SELECT * FROM CatmaAttributes")
+	if err != nil {
+		fmt.Println(err.Error())
+		return typelist
+	}
+
+	for rows.Next() {
+		var nTypeID int
+		var catmaAttributeName string
+		var catmaValueInt string
+		var catmaValueReal string
+		var catmaValueText string
+
+		var catmaValue string
+
+		err := rows.Scan(&nTypeID, &catmaAttributeName, &catmaValueInt, &catmaValueReal, &catmaValueText)
+
+		if err != nil {
+			fmt.Println("Error parsing attribute\n\t", err.Error())
+			continue
+		}
+		if catmaValueInt != "None" {
+			catmaValue = catmaValueInt
+		} else if catmaValueReal != "None" {
+			catmaValue = catmaValueReal
+		} else if catmaValueText != "None" {
+			catmaValue = catmaValueText
+		}
+		lookup = append(lookup, CatmaAttributeLookup{nTypeID, catmaAttributeName, catmaValue})
+	}
+
+	go func() {
+		for {
+			select {
+			case k := <-SDETypeChan:
+				typelist = append(typelist, k)
+			case <-time.Tick(100 * time.Millisecond):
+				if breakr {
+					break
+				}
+			}
+		}
+	}()
+
+	for _, v := range lookup {
+		if v.catmaAttributeName == "mDisplayName" && strings.Contains(strings.ToLower(v.catmaValue), strings.ToLower(name)) {
+			temp := SDEType{}
+			temp.TypeID = v.nTypeID
+			temp.Attributes = make(map[string]string)
+			temp.Attributes["mDisplayName"] = v.catmaValue
+			SDETypeChan <- temp
+		}
+	}
+	breakr = true
 	return typelist
 }
 
