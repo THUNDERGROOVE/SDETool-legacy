@@ -79,14 +79,15 @@ SDETool -d 365448 -c 2 -p 3
 SDETool -d "kaalakiota rail rifle" -c 2 -p 3
 # or
 SDETool -d wpn_railrifle_ca_pro -c 2 -p 3
-``` 
+```
+
 It will display a 64 bit float which should go out to 16(?) decimal places.  _This may change_
 
 TODO
 ====
 
-More input types for -i and -d use the typeName and display name to lookup with the best match working? (Requires that I implement some sort of fuzzy search function that takes a map[int]string of possible matches?)
-
-More calculations like damage for things like dampening, range amps, speed, etc. (Implemented GenericCalculateValue, should make it easier when I get to it)
-
-<del>I'm currently working on implementing a faster way of using the -s flag.  It takes about 0.1 seconds for each type that matches our search pattern so when we have > 30 items it takes a long time to return a result.  Will be using fewer SQL querries and possible GoRoutines and channels to get results back faster.</del> Mostly done, would still like faster searches
+1. More calculations like damage for things like dampening, range amps, speed, etc.
+..- (Implemented GenericCalculateValue, should make it easier when I get to it)
+2. <del>I'm currently working on implementing a faster way of using the -s flag.  
+.. It takes about 0.1 seconds for each type that matches our search pattern so when we have > 30 items it takes a long time to return a result.  Will be using fewer SQL querries and possible GoRoutines and channels to get results back faster.</del> 
+..- Mostly done, would still like faster searches
