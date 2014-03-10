@@ -45,5 +45,8 @@ func checkfile() {
 		}
 		defer db.Close()
 		db.Exec("CREATE INDEX lookup ON CatmaAttributes(catmaAttributeName,catmaValueText)")
+	} else {
+		// Delete our SDEZip when we get a chance
+		os.Remove(SDEFile + ".zip")
 	}
 }

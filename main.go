@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 const (
@@ -21,6 +22,7 @@ var (
 	VersionFlag   *bool   // Print current version
 	SlowFlag      *bool   // Don't use optimizations
 	TimeExecution *bool   // Should we time our functions?
+	Clean         *bool
 
 	// Damage calculations
 	Damage           *string // Damage is used to provide a TypeID to calculate damage of a weapon
@@ -39,6 +41,7 @@ func init() {
 	VersionFlag = flag.Bool("version", false, "Prints the SDETool version")
 	SlowFlag = flag.Bool("slow", false, "Forces the use of unoptimized functions")
 	TimeExecution = flag.Bool("time", false, "Times the execution of functions that may take a decent amount of time")
+	Clean = flag.Bool("clean", false, "Cleans all database and cache files")
 
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")
@@ -89,6 +92,10 @@ func main() {
 		if *BasicModCount != 0 {
 			fmt.Println("->", *BasicModCount, "Complex damage modifiers")
 		}
+	} else if *Clean {
+		fmt.Println("Cleaning SDETool directory")
+		os.Remove(SDEFile)
+		os.Remove(SDEFile + ".zip")
 	} else {
 		flag.PrintDefaults()
 	}
