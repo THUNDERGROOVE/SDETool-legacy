@@ -329,7 +329,50 @@ func SearchSDE(name string) []SDEType {
 	} else {
 		return GetSDEWhereNameContains(name)
 	}
+}
 
+// SearchSDEFlag is very similar to SearchSDE except we print results as we are finished
+// getting information about them instead of appending it to a slice, returning the slice
+// and printing that in a for loop.  Mostly a modified version of GetSDEWhereNameContainsFastC()
+func SearchSDEFlag(name string) {
+	defer TimeFunction(time.Now(), "SearchSDEFlag("+name+")")
+
+	rows, err := db.Query("SELECT * FROM CatmaAttributes")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	for rows.Next() {
+		var nTypeID int
+		var catmaAttributeName string
+		var catmaValueInt string
+		var catmaValueReal string
+		var catmaValueText string
+
+		var catmaValue string
+
+		err := rows.Scan(&nTypeID, &catmaAttributeName, &catmaValueInt, &catmaValueReal, &catmaValueText)
+
+		if err != nil {
+			fmt.Println("Error parsing attribute\n\t", err.Error())
+			continue // Skip the rest of the iteration to prevent extra error messages and potential panics.
+		}
+		if catmaValueInt != "None" {
+			catmaValue = catmaValueInt
+		} else if catmaValueReal != "None" {
+			catmaValue = catmaValueReal
+		} else if catmaValueText != "None" {
+			catmaValue = catmaValueText
+		}
+		v := CatmaAttributeLookup{nTypeID, catmaAttributeName, catmaValue}
+		if v.catmaAttributeName == "mDisplayName" && strings.Contains(strings.ToLower(v.catmaValue), strings.ToLower(name)) {
+			temp := SDEType{}
+			temp.TypeID = v.nTypeID
+			temp.Attributes = make(map[string]string)
+			temp.Attributes["mDisplayName"] = v.catmaValue
+			fmt.Println(temp.TypeID, "|", temp.GetName())
+		}
+	}
 }
 
 // GetSDEWhereNameContains returns a slice of SDETypes whose mDisplayName contains name

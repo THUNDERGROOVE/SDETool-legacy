@@ -25,15 +25,7 @@ func main() {
 		fmt.Println("SDETool version", Version)
 	} else if *args.SearchFlag != "" {
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")
-		k := []util.SDEType{}
-		if *args.SlowFlag {
-			k = util.GetSDEWhereNameContains(*args.SearchFlag)
-		} else {
-			k = util.SearchSDE(*args.SearchFlag)
-		}
-		for _, c := range k {
-			fmt.Println(c.TypeID, "| "+c.GetName())
-		}
+		util.SearchSDEFlag(*args.SearchFlag)
 	} else if *args.InfoFlag != "" {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
