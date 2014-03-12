@@ -10,11 +10,11 @@ Highly unoptimized for now however it should be fairly stable(hopefully).
 Building
 ========
 You need [Go](http://golang.org) with your GOPATH environment variable setup our dependencies
-```
+``` bash
 go get github.com/mattn/go-sqlite3
 ```
 Then you should be able to
-```
+``` bash
 make
 ```
 And have your SDETool.exe or SDETool binary!
