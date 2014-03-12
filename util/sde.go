@@ -94,8 +94,8 @@ func (t *SDEType) HasTag(tag int) bool {
 // HasTagS returns true if SDEType contains a tag by typeName
 func (t *SDEType) HasTagS(tag string) bool {
 	for k, v := range t.Attributes {
-		if strings.Contains(k, "tag.") { // Might as well be a tag, even false positives won't really hurt
-
+		if strings.Contains(k, "tag.") && tag == v { // Might as well be a tag, even false positives won't really hurt
+			return true
 		}
 	}
 	return false

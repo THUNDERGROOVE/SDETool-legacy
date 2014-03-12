@@ -7,6 +7,7 @@ package util
 import (
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/args"
+	"io/ioutil"
 	"regexp"
 	"strconv"
 	"strings"
@@ -83,4 +84,36 @@ func printNotZero(name string, value int) {
 	if value != 0 {
 		fmt.Println(name, value)
 	}
+}
+
+func cleanTypeName(typeName string) string {
+	a := strings.Split(typeName, " ")
+	t := strings.Join(a, "") // Remove spaces
+	t = strings.Join(strings.Split(t, "-"), "")
+	t = strings.Join(strings.Split(t, "'"), "")
+	t = strings.Join(strings.Split(t, "/"), "")
+	return t
+}
+
+// Dumps types into a text file for use in category.go
+// DISCLAIMER:  This function is VERY memory intensive.
+// Expect it to eat ALL of your RAM and stop to a crawl
+// while your OS pages the data :P
+func DumpTypes() {
+	f := ""
+	var err error
+	rows, err := db.Query("SELECT * FROM CatmaTypes")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	for rows.Next() {
+		var typeID int
+		var typeName string
+		err = rows.Scan(&typeID, &typeName)
+		fmt.Println("Proccessing " + typeName)
+		s := GetSDETypeIDFast(typeID)
+		f += cleanTypeName(s.GetName()) + " = " + strconv.Itoa(typeID) + "\n"
+	}
+	ioutil.WriteFile("typeDump.txt", []byte(f), 0777)
 }

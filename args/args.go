@@ -17,7 +17,8 @@ var (
 	VersionFlag   *bool   // Print current version
 	SlowFlag      *bool   // Don't use optimizations
 	TimeExecution *bool   // Should we time our functions?
-	Clean         *bool
+	Clean         *bool   // Cleans cache and database files
+	DumpTypes     *bool   // Dumps all types to a file for use with category.go
 
 	// Damage calculations
 	Damage           *string // Damage is used to provide a TypeID to calculate damage of a weapon
@@ -37,6 +38,7 @@ func init() {
 	SlowFlag = flag.Bool("slow", false, "Forces the use of unoptimized functions")
 	TimeExecution = flag.Bool("time", false, "Times the execution of functions that may take a decent amount of time")
 	Clean = flag.Bool("clean", false, "Cleans all database and cache files")
+	DumpTypes = flag.Bool("dump", false, "Dumps all types to a file for use with the category package")
 
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")

@@ -51,6 +51,9 @@ func main() {
 		fmt.Println("Cleaning SDETool directory")
 		os.Remove(SDEFile)
 		os.Remove(SDEFile + ".zip")
+	} else if *args.DumpTypes {
+		fmt.Println("Dumping types to text file :D")
+		util.DumpTypes()
 	} else {
 		flag.PrintDefaults()
 	}
