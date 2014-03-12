@@ -148,20 +148,20 @@ func (t *SDEType) PrintInfo() {
 	}
 	if t.HasTag(category.TagDropsuit) {
 		fmt.Println("===== Dropsuit =====")
-		fmt.Println("-> Heavy Weapons:", t.HeavyWeapons)
-		fmt.Println("-> Light Weapons:", t.LightWeapons)
-		fmt.Println("-> Sidearms:", t.Sidearms)
-		fmt.Println("-> Equipment slots:", t.EquipmentSlots)
-		fmt.Println("-> High slots:", t.HighModules)
-		fmt.Println("-> Low slots:", t.LowModules)
+		printNotZero("-> Heavy Weapons:", t.HeavyWeapons)
+		printNotZero("-> Light Weapons:", t.LightWeapons)
+		printNotZero("-> Sidearms:", t.Sidearms)
+		printNotZero("-> Equipment slots:", t.EquipmentSlots)
+		printNotZero("-> High slots:", t.HighModules)
+		printNotZero("-> Low slots:", t.LowModules)
 
 	}
 	if t.HasTag(category.TagVehicle) {
 		fmt.Println("===== Vehicle =====")
-		fmt.Println("-> High slots:", t.HighModules)
-		fmt.Println("-> Low slots:", t.LowModules)
-		fmt.Println("-> Large Turrets:", t.LargeTurrets)
-		fmt.Println("-> Small Turrets:", t.SmallTurrets)
+		printNotZero("-> High slots:", t.HighModules)
+		printNotZero("-> Low slots:", t.LowModules)
+		printNotZero("-> Large Turrets:", t.LargeTurrets)
+		printNotZero("-> Small Turrets:", t.SmallTurrets)
 	}
 	if len(t.Tags) > 0 {
 

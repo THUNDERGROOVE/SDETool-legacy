@@ -76,3 +76,11 @@ func ResolveInput(s string) int {
 	}
 	return 0
 }
+
+// Helper function designed for PrintInfo() to print a weapon/slottype only
+// if not zero.
+func printNotZero(name string, value int) {
+	if value != 0 {
+		fmt.Println(name, value)
+	}
+}
