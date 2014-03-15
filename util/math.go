@@ -1,7 +1,8 @@
+package util
+
 /*
 	math.go provides helpers for calculating various things
 */
-package util
 
 import (
 	"math"

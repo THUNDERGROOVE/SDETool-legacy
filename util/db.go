@@ -1,9 +1,8 @@
+package util
+
 /*
 	db.go contains all of the methods related to handling the DustSDE database.
 */
-
-package util
-
 import (
 	"database/sql"
 	"fmt"

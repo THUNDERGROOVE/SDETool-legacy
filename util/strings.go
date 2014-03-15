@@ -1,7 +1,8 @@
+package util
+
 /*
 	strings.go implements various functions for working with strings that aren't in the strings package
 */
-package util
 
 import (
 	"strings"

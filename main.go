@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/args"
+	"github.com/THUNDERGROOVE/SDETool/server"
 	"github.com/THUNDERGROOVE/SDETool/util"
 	"os"
 )
@@ -23,6 +24,8 @@ func main() {
 		util.PrintLicense()
 	} else if *args.VersionFlag {
 		fmt.Println("SDETool version", Version)
+	} else if *args.RunServer {
+		server.RunServer()
 	} else if *args.SearchFlag != "" {
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")
 		util.SearchSDEFlag(*args.SearchFlag)
@@ -30,6 +33,11 @@ func main() {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
 		t.PrintInfo()
+		if *args.GetMarketData {
+			fmt.Println("===== Market Report =====")
+			a := t.GetTotalISKSpent()
+			fmt.Println("There has been", a, "ISK spent on", t.GetName())
+		}
 	} else if *args.Damage != "" {
 		t := util.GetSDETypeID(util.ResolveInput(*args.Damage))
 		fmt.Println("Getting damage on: " + t.GetName())
@@ -54,6 +62,8 @@ func main() {
 	} else if *args.DumpTypes {
 		fmt.Println("Dumping types to text file :D")
 		util.DumpTypes()
+	} else if *args.GetMarketData && *args.InfoFlag == "" {
+		fmt.Println("The -m(arket) flag requires that you specifiy a type with -i")
 	} else {
 		flag.PrintDefaults()
 	}

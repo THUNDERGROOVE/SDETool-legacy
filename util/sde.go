@@ -173,7 +173,7 @@ func (t *SDEType) PrintInfo() {
 		printNotZero("-> Large Turrets:", t.LargeTurrets)
 		printNotZero("-> Small Turrets:", t.SmallTurrets)
 	}
-	if len(t.Tags) > 0 {
+	if len(t.Tags) > 0 { // Only print if we have tags to begin with. :P
 
 		fmt.Println("===== Tags =====")
 		for _, c := range t.Tags {
