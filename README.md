@@ -9,6 +9,10 @@ Highly unoptimized for now however it should be fairly stable(hopefully).
 Building
 ========
 You need [Go](http://golang.org) with your GOPATH environment variable setup our dependencies
+
+On Windows you will need a matching version of GCC which you can usually get from either [Cygwin](http://www.cygwin.com/) or [Mingw](http://www.mingw.org/)  I use Mingw so that's your best bet.  It must match the CPU architecture as what you're building for (386, amd64).
+
+In Linux you'll need build-essentials.  Installing it can depend on your distro however you should be able to figure this out if you need.
 ``` bash
 go get github.com/mattn/go-sqlite3
 ```
@@ -18,7 +22,7 @@ make
 ```
 And have your SDETool.exe or SDETool binary!
 
-If you have any issues building just submit an issue and I'll do my best sorting it out however it should work on any officially supported platform.  Currently I test it in Windows 8.1 and Debian testing.
+If you have any issues building just submit an issue and I'll do my best sorting it out however it should work on any officially supported platform from Go(Windows, Linux, FreeBSD, OpenBSD and Plan9).  Currently I test it in Windows 8.1 and Debian testing.
 
 Usage
 =====
