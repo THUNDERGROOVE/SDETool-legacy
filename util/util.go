@@ -3,7 +3,6 @@
 	Used to consolidate most of the codebase out of the main package and allow other devs
 	to use my code if they want.
 */
-
 package util
 
 import (
