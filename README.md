@@ -61,7 +61,6 @@ The Amarr variant is a durable, combat-focused suit that provides above-average 
 When deployed, a soldier equipped with a Logistics suit fills a vital tactical role in small unit operations and full-scale warfare, providing both, medical and mechanical support.
 -> Cost 57690 ISK
 ===== Dropsuit =====
--> Heavy Weapons: 0
 -> Light Weapons: 1
 -> Sidearms: 1
 -> Equipment slots: 3
