@@ -7,6 +7,10 @@ Highly unoptimized for now however it should be fairly stable(hopefully).
 
 [![Gobuild Download](http://gobuild.io/badge/github.com/THUNDERGROOVE/SDETool/download.png)](http://gobuild.io/github.com/THUNDERGROOVE/SDETool)
 
+Server brach
+============
+This is the server branch for working on a web interface for SDETool, mostly on the backburner for now though.
+
 Building
 ========
 You need [Go](http://golang.org) with your GOPATH environment variable setup our dependencies
