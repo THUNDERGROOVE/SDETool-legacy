@@ -1,5 +1,5 @@
 /*
-	util.go is for constants, package variables and functions that belong no where else.
+	The util package is for constants, package variables and functions that belong no where else.
 	Used to consolidate most of the codebase out of the main package and allow other devs
 	to use my code if they want.
 */
