@@ -18,6 +18,7 @@ const (
 
 func main() {
 	checkfile()
+	args.Init()
 	util.DBInitialize()
 	// Change to select switch?
 	if *args.LicenseFlag {
@@ -28,7 +29,8 @@ func main() {
 		server.RunServer()
 	} else if *args.SearchFlag != "" {
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")
-		util.SearchSDEFlag(*args.SearchFlag)
+		s := util.SearchSDEFlag(*args.SearchFlag)
+		fmt.Println(s)
 	} else if *args.InfoFlag != "" {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)

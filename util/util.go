@@ -7,7 +7,6 @@ package util
 
 import (
 	"fmt"
-	"github.com/THUNDERGROOVE/SDETool/args"
 	"io/ioutil"
 	"regexp"
 	"strconv"
@@ -15,10 +14,14 @@ import (
 	"time"
 )
 
+var (
+	TimeFunc bool
+)
+
 // Used to measure execuation time of a function, use with defer
 func TimeFunction(start time.Time, name string) {
 	elapsed := time.Since(start)
-	if *args.TimeExecution {
+	if TimeFunc {
 		fmt.Printf("%s took %s\n", name, elapsed)
 	}
 }
@@ -84,6 +87,13 @@ func ResolveInput(s string) int {
 func printNotZero(name string, value int) {
 	if value != 0 {
 		fmt.Println(name, value)
+	}
+}
+func returnNotZero(name string, value int) string {
+	if value != 0 {
+		return name + " " + strconv.Itoa(value) + "\n"
+	} else {
+		return ""
 	}
 }
 

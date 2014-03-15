@@ -3,7 +3,6 @@ package util
 import (
 	//"database/sql"
 	"fmt"
-	"github.com/THUNDERGROOVE/SDETool/args"
 	"github.com/THUNDERGROOVE/SDETool/category"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
@@ -180,22 +179,64 @@ func (t *SDEType) PrintInfo() {
 			fmt.Println("->", c, GetTypeName(c))
 		}
 	}
-	if *args.VerboseInfo == true {
-		l := longestLen(t.Attributes)
-		fmt.Println(l)
-		if len(t.Attributes) > 0 {
-			fmt.Println("===== Attributes =====:")
-			for k, v := range t.Attributes {
-				// Don't print descriptions
-				if k == "mDescription" || k == "mShortDescription" {
-					continue
-				}
-				fmt.Println(k + xspaces(longestLen(t.Attributes)-len(k)) + " | " + v)
-			}
-		} else {
-			fmt.Println("No attributes to show")
+	// if *args.VerboseInfo == true {  Could be causing nil pointer ref
+	// 	l := longestLen(t.Attributes)
+	// 	fmt.Println(l)
+	// 	if len(t.Attributes) > 0 {
+	// 		fmt.Println("===== Attributes =====:")
+	// 		for k, v := range t.Attributes {
+	// 			// Don't print descriptions
+	// 			if k == "mDescription" || k == "mShortDescription" {
+	// 				continue
+	// 			}
+	// 			fmt.Println(k + xspaces(longestLen(t.Attributes)-len(k)) + " | " + v)
+	// 		}
+	// 	} else {
+	// 		fmt.Println("No attributes to show")
+	// 	}
+	// }
+}
+
+// PrintInfo is a generic function to print the info of an SDEType
+func (t *SDEType) StringInfo() string {
+	s := "Getting stats on " + t.GetName() + "\n"
+	if t.GetDescription() != "" {
+		s += "===== Description =====\n"
+		s += t.GetDescription() + "\n"
+	}
+	if t.GetPrice() != "" {
+		s += "-> Cost" + t.GetPrice() + " ISK\n"
+	}
+	//  Scanner
+	if t.Category() == category.ActiveScanner {
+		s += "====== Scanner ======\n"
+		s += "-> Scan DB" + " " + t.Attributes["activeScanSignaturePrecision"] + "\n"
+	}
+	if t.HasTag(category.TagDropsuit) {
+		s += "===== Dropsuit =====\n"
+		s += returnNotZero("-> Heavy Weapons:", t.HeavyWeapons)
+		s += returnNotZero("-> Light Weapons:", t.LightWeapons)
+		s += returnNotZero("-> Sidearms:", t.Sidearms)
+		s += returnNotZero("-> Equipment slots:", t.EquipmentSlots)
+		s += returnNotZero("-> High slots:", t.HighModules)
+		s += returnNotZero("-> Low slots:", t.LowModules)
+
+	}
+	if t.HasTag(category.TagVehicle) {
+		s += "===== Vehicle =====\n"
+		s += returnNotZero("-> High slots:", t.HighModules)
+		s += returnNotZero("-> Low slots:", t.LowModules)
+		s += returnNotZero("-> Large Turrets:", t.LargeTurrets)
+		s += returnNotZero("-> Small Turrets:", t.SmallTurrets)
+	}
+	if len(t.Tags) > 0 { // Only print if we have tags to begin with. :P
+
+		s += "===== Tags =====\n"
+		for _, c := range t.Tags {
+			s += "-> " + strconv.Itoa(c) + " " + GetTypeName(c) + "\n"
 		}
 	}
+	return s
 }
 
 // GetSDETypeID returns an SDEType by typeID
@@ -343,13 +384,14 @@ func SearchSDE(name string) []SDEType {
 
 // SearchSDEFlag is very similar to SearchSDE except we print results as we are finished
 // getting information about them instead of appending it to a slice, returning the slice
-// and printing that in a for loop.  Mostly a modified version of GetSDEWhereNameContainsFastC()
-func SearchSDEFlag(name string) {
+// and that in a for loop.  Mostly a modified version of GetSDEWhereNameContainsFastC()
+func SearchSDEFlag(name string) string {
 	defer TimeFunction(time.Now(), "SearchSDEFlag("+name+")")
-
+	s := ""
 	rows, err := db.Query("SELECT * FROM CatmaAttributes")
 	if err != nil {
 		fmt.Println(err.Error())
+		return "Error with querry"
 	}
 
 	for rows.Next() {
@@ -380,9 +422,10 @@ func SearchSDEFlag(name string) {
 			temp.TypeID = v.nTypeID
 			temp.Attributes = make(map[string]string)
 			temp.Attributes["mDisplayName"] = v.catmaValue
-			fmt.Println(temp.TypeID, "|", temp.GetName())
+			s += strconv.Itoa(temp.TypeID) + " | " + temp.GetName() + "\n"
 		}
 	}
+	return s
 }
 
 // GetSDEWhereNameContains returns a slice of SDETypes whose mDisplayName contains name

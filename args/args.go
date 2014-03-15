@@ -10,30 +10,47 @@ import (
 
 var (
 	// Flag variables
-	SearchFlag    *string // SearchFlag is used to provide a string to search for types
-	InfoFlag      *string // InfoFlag is used to provide an int to display info about a type
-	VerboseInfo   *bool   // If our info should print as much data about a type that we can
-	LicenseFlag   *bool   // Print Licensing information
-	VersionFlag   *bool   // Print current version
-	SlowFlag      *bool   // Don't use optimizations
-	TimeExecution *bool   // Should we time our functions?
-	Clean         *bool   // Cleans cache and database files
-	DumpTypes     *bool   // Dumps all types to a file for use with category.go
-	GetMarketData *bool   // Flag used if getting market data with -i
-
-	// Damage calculations
+	SearchFlag       *string // SearchFlag is used to provide a string to search for types
+	InfoFlag         *string // InfoFlag is used to provide an int to display info about a type
 	Damage           *string // Damage is used to provide a TypeID to calculate damage of a weapon
+	VerboseInfo      *bool   // If our info should print as much data about a type that we can
+	LicenseFlag      *bool   // Print Licensing information
+	VersionFlag      *bool   // Print current version
+	SlowFlag         *bool   // Don't use optimizations
+	TimeExecution    *bool   // Should we time our functions?
+	Clean            *bool   // Cleans cache and database files
+	DumpTypes        *bool   // Dumps all types to a file for use with category.go
+	GetMarketData    *bool   // Flag used if getting market data with -i
+	RunServer        *bool   // Runs a server for hosting the web version of SDETool
 	ComplexModCount  *int    // ComplexModCount is used to calculate how many Complex mods to use
 	EnhancedModCount *int    // EnhancedModCount is used to calculate how many Enhanced mods to use
 	BasicModCount    *int    // BasicModCount is used to calculate how many Basic mods to use
 	Prof             *int    // Prof is how many levels of proficiency used when calculating damage
-
-	// Server related
-	RunServer *bool // Runs a server for hosting the web version of SDETool
-	Port      *int  // What port to listen on?
+	Port             *int    // What port to listen on?
 )
 
-func init() {
+// func init() {
+// 	// No nil pointers :D
+// 	*SearchFlag = ""
+// 	*InfoFlag = ""
+// 	*Damage = ""
+// 	*VerboseInfo = false
+// 	*LicenseFlag = false
+// 	*VersionFlag = false
+// 	*SlowFlag = false
+// 	*TimeExecution = false
+// 	*Clean = false
+// 	*DumpTypes = false
+// 	*GetMarketData = false
+// 	*RunServer = false
+// 	*ComplexModCount = 0
+// 	*EnhancedModCount = 0
+// 	*BasicModCount = 0
+// 	*Prof = 0
+// 	*Port = 0
+// }
+
+func Init() {
 	// Flags
 	SearchFlag = flag.String("s", "", "Search for TypeIDs")
 	InfoFlag = flag.String("i", "", "Get info with a TypeID, typeName or mDisplayName")
