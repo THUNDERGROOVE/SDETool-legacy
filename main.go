@@ -19,6 +19,8 @@ const (
 func main() {
 	checkfile()
 	args.Init()
+	util.VerboseInfo = *args.VerboseInfo
+	util.TimeFunc = *args.TimeExecution
 	util.DBInitialize()
 	// Change to select switch?
 	if *args.LicenseFlag {
@@ -34,6 +36,7 @@ func main() {
 	} else if *args.InfoFlag != "" {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
+		t.ApplySkillsToType()
 		t.PrintInfo()
 		if *args.GetMarketData {
 			fmt.Println("===== Market Report =====")
@@ -43,6 +46,10 @@ func main() {
 	} else if *args.Damage != "" {
 		t := util.GetSDETypeID(util.ResolveInput(*args.Damage))
 		fmt.Println("Getting damage on: " + t.GetName())
+		if *args.ComplexModCount == 0 && *args.EnhancedModCount == 0 && *args.BasicModCount == 0 && *args.Prof == 0 {
+			t.PrintDamageChart()
+			return
+		}
 		d := t.GetRawDamage(*args.Prof, *args.ComplexModCount, *args.EnhancedModCount, *args.BasicModCount)
 		fmt.Println("->", t.GetName(), "would do ", d, "damage")
 		if *args.Prof != 0 {

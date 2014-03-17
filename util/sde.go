@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+var (
+	VerboseInfo bool // Set by main, when we used *args.VerboseInfo we get nil pointer if args package isn't used
+)
+
 // SDEType is used to help manipulate and look up information about a particular type
 // in the SDE
 type SDEType struct {
@@ -18,6 +22,8 @@ type SDEType struct {
 	TypeName       string
 	Class          string
 	Attributes     map[string]string
+	Skills         map[string]string
+	Attribs        TypeAttributes
 	Tags           []int
 	HighModules    int
 	LowModules     int
@@ -28,6 +34,32 @@ type SDEType struct {
 	Sidearms       int
 	LargeTurrets   int
 	SmallTurrets   int
+}
+
+// TypeAttributes is used to store information about a type such as HP, CPU, PG, etc.
+type TypeAttributes struct {
+	Shields                int /* Suits */
+	Armor                  int
+	CPU                    int /* Applies to useage as well on items */
+	PG                     int /* Same as above */
+	ArmorRepair            int
+	ShieldRechargeRate     int
+	ShieldRechargeDelay    int
+	ShieldRechargeDepleted int
+	HackSpeedFactor        int
+	Stamina                int
+	MeleeDamage            int
+	ScanProfile            int
+	ScanPrecision          int
+	ScanRadius             int
+	AbsoluteRange          int /* Weapons */
+	EffectiveRange         int
+	FireInterval           int
+	Damage                 int
+	SplashDamage           int
+	SplashRadius           int
+	ShotCost               int
+	ShotPerRound           int
 }
 
 // GetRawDamage returns raw damages with prof and damage mods taken into account
@@ -140,6 +172,34 @@ func (t *SDEType) Category() int {
 	return c
 }
 
+func (t *SDEType) PrintDamageChart() {
+	if t.HasTag(category.Tag_weapon) == false {
+		fmt.Println("This is not a weapon")
+		return
+	}
+	header := make([]string, 0)
+	header = append(header, "Damage mods[cmplx]")
+	header = append(header, "Proficiency level")
+	header = append(header, "Output damage")
+	ll := longestLenS(header)
+	for i := 0; i < len(header); i++ {
+		if i != len(header)-1 {
+			print(header[i] + xspaces(ll-len(header[i])) + "|")
+		} else {
+			print(header[i] + xspaces(ll-len(header[i])))
+		}
+	}
+	print("\n")
+	for c := 0; c < 6; c++ {
+		for p := 0; p < 6; p++ {
+			d := t.GetRawDamage(p, c, 0, 0)
+			print(strconv.Itoa(c) + xspaces(ll-len(strconv.Itoa(c))) + "|")
+			print(strconv.Itoa(p) + xspaces(ll-len(strconv.Itoa(p))) + "|")
+			print(strconv.Itoa(int(d)) + xspaces(ll-len(strconv.Itoa(int(d)))) + "\n")
+		}
+	}
+}
+
 // PrintInfo is a generic function to print the info of an SDEType
 func (t *SDEType) PrintInfo() {
 	fmt.Println("Getting stats on " + t.GetName())
@@ -163,6 +223,23 @@ func (t *SDEType) PrintInfo() {
 		printNotZero("-> Equipment slots:", t.EquipmentSlots)
 		printNotZero("-> High slots:", t.HighModules)
 		printNotZero("-> Low slots:", t.LowModules)
+		printNotZero("-> Repair rate:", t.Attribs.ArmorRepair)
+		printNotZero("-> Shields:", t.Attribs.Shields)
+		printNotZero("-> Armor:", t.Attribs.Armor)
+		printNotZero("-> Shield recharge rate:", t.Attribs.ShieldRechargeRate)
+		printNotZero("-> Shield recharge delay:", t.Attribs.ShieldRechargeDelay)
+		printNotZero("-> Shield depleted delay:", t.Attribs.ShieldRechargeDepleted)
+		printNotZero("-> Scan precision:", t.Attribs.ScanPrecision)
+		printNotZero("-> Scan profile:", t.Attribs.ScanProfile)
+		printNotZero("-> Scan radius:", t.Attribs.ScanRadius)
+		printNotZero("-> Stamina:", t.Attribs.Stamina)
+		printNotZero("-> Melee damage", t.Attribs.MeleeDamage)
+
+	}
+	if t.HasTag(category.Tag_weapon) {
+		fmt.Println("===== Weapon =====")
+		printNotZero("-> Damage", t.Attribs.Damage)
+		printNotZero("-> Range", t.Attribs.AbsoluteRange)
 
 	}
 	if t.HasTag(category.TagVehicle) {
@@ -179,22 +256,27 @@ func (t *SDEType) PrintInfo() {
 			fmt.Println("->", c, GetTypeName(c))
 		}
 	}
-	// if *args.VerboseInfo == true {  Could be causing nil pointer ref
-	// 	l := longestLen(t.Attributes)
-	// 	fmt.Println(l)
-	// 	if len(t.Attributes) > 0 {
-	// 		fmt.Println("===== Attributes =====:")
-	// 		for k, v := range t.Attributes {
-	// 			// Don't print descriptions
-	// 			if k == "mDescription" || k == "mShortDescription" {
-	// 				continue
-	// 			}
-	// 			fmt.Println(k + xspaces(longestLen(t.Attributes)-len(k)) + " | " + v)
-	// 		}
-	// 	} else {
-	// 		fmt.Println("No attributes to show")
-	// 	}
-	// }
+	if VerboseInfo == true {
+		if len(t.Attributes) > 0 {
+			fmt.Println("===== Attributes =====")
+			for k, v := range t.Attributes {
+				// Don't print descriptions
+				if k == "mDescription" || k == "mShortDescription" {
+					continue
+				}
+				fmt.Println(k + xspaces(longestLen(t.Attributes)-len(k)) + " | " + v)
+			}
+		} else {
+			fmt.Println("No attributes to show")
+		}
+		if len(t.Skills) > 0 {
+			fmt.Println("\n===== Skills ======")
+			for k, v := range t.Skills {
+				fmt.Println(k + xspaces(longestLen(t.Skills)-len(k)) + " | " + v)
+			}
+		}
+
+	}
 }
 
 // PrintInfo is a generic function to print the info of an SDEType

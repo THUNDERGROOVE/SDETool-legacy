@@ -56,6 +56,17 @@ func longestLen(list map[string]string) int {
 	return l
 }
 
+// longestLen returns the length of the longest string in list
+func longestLenS(list []string) int {
+	l := 0
+	for _, v := range list {
+		if len(v) > l {
+			l = len(v)
+		}
+	}
+	return l
+}
+
 // ResolveInput takes in a string and returns a TypeID.
 // Can take a TypeID, name, display name.  If there are multiple matches
 // we will return the closest match
