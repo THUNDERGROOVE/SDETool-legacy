@@ -85,6 +85,61 @@ SDETool -d wpn_railrifle_ca_pro -c 2 -p 3
 
 It will display a 64 bit float which should go out to 16(?) decimal places.  _This may change_
 
+Along with exact values you can also get tables of values by:
+``` bash
+SDETool -d "Kaalakiota rail rifle"
+```
+Outputs:
+``` 
+Getting damage on: Kaalakiota Rail Rifle
+Damage mods[cmplx]|Proficiency level |Output damage     
+0                 |0                 |60                
+0                 |1                 |62                
+0                 |2                 |63                
+0                 |3                 |65                
+0                 |4                 |66                
+0                 |5                 |68                
+1                 |0                 |65                
+1                 |1                 |67                
+1                 |2                 |69                
+1                 |3                 |70                
+1                 |4                 |72                
+1                 |5                 |74                
+2                 |0                 |71                
+2                 |1                 |73                
+2                 |2                 |75                
+2                 |3                 |77                
+2                 |4                 |79                
+2                 |5                 |81                
+3                 |0                 |77                
+3                 |1                 |79                
+3                 |2                 |81                
+3                 |3                 |83                
+3                 |4                 |85                
+3                 |5                 |87                
+4                 |0                 |80                
+4                 |1                 |82                
+4                 |2                 |84                
+4                 |3                 |86                
+4                 |4                 |88                
+4                 |5                 |91                
+5                 |0                 |82                
+5                 |1                 |84                
+5                 |2                 |86                
+5                 |3                 |88                
+5                 |4                 |90                
+5                 |5                 |92               
+```
+
+What works?
+===========
+1. Damage calculations (With generic damage tables)
+2. Searching
+3. Dynamic info printing
+4. Simple gathering of skill bonus (Currently only works on additive skills that don't work off of a percentage)
+5. Recusive skill lookups. I.E. it knows it takes Amarr medium dropsuits level 3 to use Amarr assault dropsuits.
+6. 
+
 TODO
 ====
 

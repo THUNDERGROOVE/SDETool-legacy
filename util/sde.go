@@ -184,18 +184,18 @@ func (t *SDEType) PrintDamageChart() {
 	ll := longestLenS(header)
 	for i := 0; i < len(header); i++ {
 		if i != len(header)-1 {
-			print(header[i] + xspaces(ll-len(header[i])) + "|")
+			fmt.Print(header[i] + xspaces(ll-len(header[i])) + "|")
 		} else {
-			print(header[i] + xspaces(ll-len(header[i])))
+			fmt.Print(header[i] + xspaces(ll-len(header[i])) + "\n")
 		}
 	}
 	print("\n")
 	for c := 0; c < 6; c++ {
 		for p := 0; p < 6; p++ {
 			d := t.GetRawDamage(p, c, 0, 0)
-			print(strconv.Itoa(c) + xspaces(ll-len(strconv.Itoa(c))) + "|")
-			print(strconv.Itoa(p) + xspaces(ll-len(strconv.Itoa(p))) + "|")
-			print(strconv.Itoa(int(d)) + xspaces(ll-len(strconv.Itoa(int(d)))) + "\n")
+			fmt.Print(strconv.Itoa(c) + xspaces(ll-len(strconv.Itoa(c))) + "|")
+			fmt.Print(strconv.Itoa(p) + xspaces(ll-len(strconv.Itoa(p))) + "|")
+			fmt.Print(strconv.Itoa(int(d)) + xspaces(ll-len(strconv.Itoa(int(d)))) + "\n")
 		}
 	}
 }
