@@ -114,20 +114,14 @@ func (t *SDEType) GenericCalculateValue(ValueAttribute string, HighOrLow bool, M
 
 // HasTag returns true if an SDEType contains a tag by TypeID
 func (t *SDEType) HasTag(tag int) bool {
-	for _, c := range t.Tags {
-		if tag == c {
-			return true
-		}
-	}
-	return false
+	return t.HasTagS(strconv.Itoa(tag))
 }
-
 // HasTagS returns true if SDEType contains a tag by typeName
 func (t *SDEType) HasTagS(tag string) bool {
 	for k, v := range t.Attributes {
 		if strings.Contains(k, "tag.") && tag == v { // Might as well be a tag, even false positives won't really hurt
-			return true
-		}
+      return true
+    }
 	}
 	return false
 }
@@ -215,7 +209,7 @@ func (t *SDEType) PrintInfo() {
 		fmt.Println("====== Scanner ======")
 		fmt.Println("-> Scan DB", t.Attributes["activeScanSignaturePrecision"])
 	}
-	if t.HasTag(category.TagDropsuit) {
+  if t.HasTag(category.Tag_dropsuit) {
 		fmt.Println("===== Dropsuit =====")
 		printNotZero("-> Heavy Weapons:", t.HeavyWeapons)
 		printNotZero("-> Light Weapons:", t.LightWeapons)
@@ -235,6 +229,8 @@ func (t *SDEType) PrintInfo() {
 		printNotZero("-> Stamina:", t.Attribs.Stamina)
 		printNotZero("-> Melee damage", t.Attribs.MeleeDamage)
 
+	} else {
+		fmt.Println("Not a dropsuit")
 	}
 	if t.HasTag(category.Tag_weapon) {
 		fmt.Println("===== Weapon =====")

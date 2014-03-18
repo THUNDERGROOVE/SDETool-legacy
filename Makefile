@@ -1,4 +1,5 @@
 all:
+	go fmt github.com/THUNDERGROOVE/SDETool
 	go build -v github.com/THUNDERGROOVE/SDETool
 	go install github.com/THUNDERGROOVE/SDETool/category
 	go install github.com/THUNDERGROOVE/SDETool/util

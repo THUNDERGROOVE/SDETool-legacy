@@ -23,7 +23,7 @@ import (
 // ApplySkillsToType a safe place to modify values that can be accessed easily
 func (t *SDEType) ApplyAttributesToType() { // t.Attribs. = t.Attributes[""]
 	defer TimeFunction(time.Now(), t.GetName()+".ApplyAttributesToType()")
-	if t.HasTag(category.TagDropsuit) {
+	if t.HasTag(category.Tag_dropsuit) {
 		t.Attribs.CPU, _ = strconv.Atoi(t.Attributes["mVICProp.maxCpuReserve"])
 		t.Attribs.PG, _ = strconv.Atoi(t.Attributes["mVICProp.maxPowerReserve"])
 		t.Attribs.ArmorRepair, _ = strconv.Atoi(t.Attributes["mVICProp.healArmorRate"])
@@ -130,4 +130,5 @@ func (t *SDEType) ApplySkillsToType() {
 	}
 	t.Skills = Skills // add initial skills
 	t.getAllSkills()  // finish getting rest of skills recusivly
+  t.ApplyAttributesToType()
 }
