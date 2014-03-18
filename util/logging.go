@@ -18,8 +18,8 @@ func LogInit() {
 	if err != nil {
 		panic("error opening log file")
 	}
-	Log = log.New(f, "SDETool  ", log.LstdFlags)
-	Log.Println("Log started!")
+	Log = log.New(f, "", log.LstdFlags)
+	Info("Log started!")
 	if DebugLog {
 		//log.SetOutput(os.Stderr)
 	}
@@ -31,5 +31,17 @@ func LErr(s string) {
 		term.White(os.Stderr, "")
 		fmt.Println()
 	}
+	Log.SetPrefix("WARN ")
 	Log.Println("Error: ", s)
+	Log.SetPrefix("")
+}
+func Info(s string) {
+	if DebugLog {
+		term.Cyan(os.Stderr, "Info: "+s)
+		term.White(os.Stderr, "")
+		fmt.Println()
+	}
+	Log.SetPrefix("INFO ")
+	log.Println(s)
+	log.SetPrefix("")
 }

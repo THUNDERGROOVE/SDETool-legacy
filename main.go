@@ -14,13 +14,14 @@ const (
 )
 
 func main() {
-	util.CheckFile()
+	util.LogInit()
 	args.Init()
 	util.VerboseInfo = *args.VerboseInfo
 	util.TimeFunc = *args.TimeExecution
 	util.DebugLog = *args.Debug
-	util.LogInit()
-	util.LErr("Niggers")
+	util.SDEVersion = *args.SDEVersion
+	util.LErr("Error test")
+	util.CheckFile()
 	util.DBInitialize()
 	// Change to select switch?
 	if *args.LicenseFlag {

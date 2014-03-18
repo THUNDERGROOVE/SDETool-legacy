@@ -13,6 +13,7 @@ var (
 	SearchFlag       *string // SearchFlag is used to provide a string to search for types
 	InfoFlag         *string // InfoFlag is used to provide an int to display info about a type
 	Damage           *string // Damage is used to provide a TypeID to calculate damage of a weapon
+	SDEVersion       *string // Version of the SDE to force
 	VerboseInfo      *bool   // If our info should print as much data about a type that we can
 	LicenseFlag      *bool   // Print Licensing information
 	VersionFlag      *bool   // Print current version
@@ -46,6 +47,7 @@ func Init() {
 
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")
+	SDEVersion = flag.String("sv", "1.8", "Version of the SDE to use, in the form of '1.7' or '1.8'")
 	ComplexModCount = flag.Int("c", 0, "Amount of complex damage mods, used with -d")
 	EnhancedModCount = flag.Int("e", 0, "Amount of enhanced damage mods, used with -d")
 	BasicModCount = flag.Int("b", 0, "Amount of enhanced damage mods, used with -d")
