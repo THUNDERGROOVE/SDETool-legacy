@@ -10,14 +10,12 @@ import (
 )
 
 const (
-	// Constants
-	SDEFile = "dustSDE.db"                                                           // Name for the SDE database file to be used
-	SDEUrl  = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.7_674383.zip" // URL to download the SDE
-	Version = 0.2                                                                    // Sounds right :P
+  Version = 0.2
 )
 
+
 func main() {
-	checkfile()
+  util.CheckFile()
 	args.Init()
 	util.VerboseInfo = *args.VerboseInfo
 	util.TimeFunc = *args.TimeExecution
@@ -66,8 +64,8 @@ func main() {
 		}
 	} else if *args.Clean {
 		fmt.Println("Cleaning SDETool directory")
-		os.Remove(SDEFile)
-		os.Remove(SDEFile + ".zip")
+		os.Remove(util.SDEFile)
+		os.Remove(util.SDEFile + ".zip")
 	} else if *args.DumpTypes {
 		fmt.Println("Dumping types to text file :D")
 		util.DumpTypes()
