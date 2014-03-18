@@ -152,6 +152,12 @@ func printNotZero(name string, value int) {
 		fmt.Println(name, value)
 	}
 }
+func printFNotZero(name string, value float64) {
+	if value != float64(0) {
+		fmt.Println(name, value)
+	}
+}
+
 func returnNotZero(name string, value int) string {
 	if value != 0 {
 		return name + " " + strconv.Itoa(value) + "\n"

@@ -42,22 +42,22 @@ type TypeAttributes struct {
 	Armor                  int
 	CPU                    int /* Applies to useage as well on items */
 	PG                     int /* Same as above */
-	ArmorRepair            int
-	ShieldRechargeRate     int
-	ShieldRechargeDelay    int
-	ShieldRechargeDepleted int
-	HackSpeedFactor        int
-	Stamina                int
-	MeleeDamage            int
-	ScanProfile            int
-	ScanPrecision          int
-	ScanRadius             int
-	AbsoluteRange          int /* Weapons */
-	EffectiveRange         int
-	FireInterval           int
-	Damage                 int
-	SplashDamage           int
-	SplashRadius           int
+	ArmorRepair            float64
+	ShieldRechargeRate     float64
+	ShieldRechargeDelay    float64
+	ShieldRechargeDepleted float64
+	HackSpeedFactor        float64
+	Stamina                float64
+	MeleeDamage            float64
+	ScanProfile            float64
+	ScanPrecision          float64
+	ScanRadius             float64
+	AbsoluteRange          float64 /* Weapons */
+	EffectiveRange         float64
+	FireInterval           float64
+	Damage                 float64
+	SplashDamage           float64
+	SplashRadius           float64
 	ShotCost               int
 	ShotPerRound           int
 }
@@ -116,12 +116,13 @@ func (t *SDEType) GenericCalculateValue(ValueAttribute string, HighOrLow bool, M
 func (t *SDEType) HasTag(tag int) bool {
 	return t.HasTagS(strconv.Itoa(tag))
 }
+
 // HasTagS returns true if SDEType contains a tag by typeName
 func (t *SDEType) HasTagS(tag string) bool {
 	for k, v := range t.Attributes {
 		if strings.Contains(k, "tag.") && tag == v { // Might as well be a tag, even false positives won't really hurt
-      return true
-    }
+			return true
+		}
 	}
 	return false
 }
@@ -209,33 +210,33 @@ func (t *SDEType) PrintInfo() {
 		fmt.Println("====== Scanner ======")
 		fmt.Println("-> Scan DB", t.Attributes["activeScanSignaturePrecision"])
 	}
-  if t.HasTag(category.Tag_dropsuit) {
+	if t.HasTag(category.Tag_dropsuit) {
 		fmt.Println("===== Dropsuit =====")
+		printNotZero("-> Shields:", t.Attribs.Shields)
+		printNotZero("-> Armor:", t.Attribs.Armor)
 		printNotZero("-> Heavy Weapons:", t.HeavyWeapons)
 		printNotZero("-> Light Weapons:", t.LightWeapons)
 		printNotZero("-> Sidearms:", t.Sidearms)
 		printNotZero("-> Equipment slots:", t.EquipmentSlots)
 		printNotZero("-> High slots:", t.HighModules)
 		printNotZero("-> Low slots:", t.LowModules)
-		printNotZero("-> Repair rate:", t.Attribs.ArmorRepair)
-		printNotZero("-> Shields:", t.Attribs.Shields)
-		printNotZero("-> Armor:", t.Attribs.Armor)
-		printNotZero("-> Shield recharge rate:", t.Attribs.ShieldRechargeRate)
-		printNotZero("-> Shield recharge delay:", t.Attribs.ShieldRechargeDelay)
-		printNotZero("-> Shield depleted delay:", t.Attribs.ShieldRechargeDepleted)
-		printNotZero("-> Scan precision:", t.Attribs.ScanPrecision)
-		printNotZero("-> Scan profile:", t.Attribs.ScanProfile)
-		printNotZero("-> Scan radius:", t.Attribs.ScanRadius)
-		printNotZero("-> Stamina:", t.Attribs.Stamina)
-		printNotZero("-> Melee damage", t.Attribs.MeleeDamage)
+		printFNotZero("-> Repair rate:", t.Attribs.ArmorRepair)
+		printFNotZero("-> Shield recharge rate:", t.Attribs.ShieldRechargeRate)
+		printFNotZero("-> Shield recharge delay:", t.Attribs.ShieldRechargeDelay)
+		printFNotZero("-> Shield depleted delay:", t.Attribs.ShieldRechargeDepleted)
+		printFNotZero("-> Scan precision:", t.Attribs.ScanPrecision)
+		printFNotZero("-> Scan profile:", t.Attribs.ScanProfile)
+		printFNotZero("-> Scan radius:", t.Attribs.ScanRadius)
+		printFNotZero("-> Stamina:", t.Attribs.Stamina)
+		printFNotZero("-> Melee damage", t.Attribs.MeleeDamage)
 
 	} else {
 		fmt.Println("Not a dropsuit")
 	}
 	if t.HasTag(category.Tag_weapon) {
 		fmt.Println("===== Weapon =====")
-		printNotZero("-> Damage", t.Attribs.Damage)
-		printNotZero("-> Range", t.Attribs.AbsoluteRange)
+		printFNotZero("-> Damage", t.Attribs.Damage)
+		printFNotZero("-> Range", t.Attribs.AbsoluteRange)
 
 	}
 	if t.HasTag(category.TagVehicle) {

@@ -22,33 +22,13 @@ var (
 	DumpTypes        *bool   // Dumps all types to a file for use with category.go
 	GetMarketData    *bool   // Flag used if getting market data with -i
 	RunServer        *bool   // Runs a server for hosting the web version of SDETool
-	ComplexModCount  *int    // ComplexModCount is used to calculate how many Complex mods to use
-	EnhancedModCount *int    // EnhancedModCount is used to calculate how many Enhanced mods to use
-	BasicModCount    *int    // BasicModCount is used to calculate how many Basic mods to use
-	Prof             *int    // Prof is how many levels of proficiency used when calculating damage
-	Port             *int    // What port to listen on?
+	Debug            *bool
+	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
+	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
+	BasicModCount    *int // BasicModCount is used to calculate how many Basic mods to use
+	Prof             *int // Prof is how many levels of proficiency used when calculating damage
+	Port             *int // What port to listen on?
 )
-
-// func init() {
-// 	// No nil pointers :D
-// 	*SearchFlag = ""
-// 	*InfoFlag = ""
-// 	*Damage = ""
-// 	*VerboseInfo = false
-// 	*LicenseFlag = false
-// 	*VersionFlag = false
-// 	*SlowFlag = false
-// 	*TimeExecution = false
-// 	*Clean = false
-// 	*DumpTypes = false
-// 	*GetMarketData = false
-// 	*RunServer = false
-// 	*ComplexModCount = 0
-// 	*EnhancedModCount = 0
-// 	*BasicModCount = 0
-// 	*Prof = 0
-// 	*Port = 0
-// }
 
 func Init() {
 	// Flags
@@ -62,6 +42,7 @@ func Init() {
 	Clean = flag.Bool("clean", false, "Cleans all database and cache files")
 	DumpTypes = flag.Bool("dump", false, "Dumps all types to a file for use with the category package")
 	GetMarketData = flag.Bool("m", false, "Gets market data on item, used with -i. Sorry CCP if I'm pounding your APIs ;P")
+	Debug = flag.Bool("debug", false, "Debug? Debug!")
 
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")

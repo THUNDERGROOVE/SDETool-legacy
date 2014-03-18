@@ -6,6 +6,7 @@ package util
 */
 
 import (
+	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
 	"strconv"
 	"strings"
@@ -26,44 +27,59 @@ func (t *SDEType) ApplyAttributesToType() { // t.Attribs. = t.Attributes[""]
 	if t.HasTag(category.Tag_dropsuit) {
 		t.Attribs.CPU, _ = strconv.Atoi(t.Attributes["mVICProp.maxCpuReserve"])
 		t.Attribs.PG, _ = strconv.Atoi(t.Attributes["mVICProp.maxPowerReserve"])
-		t.Attribs.ArmorRepair, _ = strconv.Atoi(t.Attributes["mVICProp.healArmorRate"])
 		t.Attribs.Armor, _ = strconv.Atoi(t.Attributes["mVICProp.maxArmor"])
 		t.Attribs.Shields, _ = strconv.Atoi(t.Attributes["mVICProp.maxShields"])
-		t.Attribs.ScanPrecision, _ = strconv.Atoi(t.Attributes["mVICProp.signatureScanPrecision"])
-		t.Attribs.ScanProfile, _ = strconv.Atoi(t.Attributes["mVICProp.signatureScanProfile"])
-		t.Attribs.ScanRadius, _ = strconv.Atoi(t.Attributes["mVICProp.signatureScanRadius"])
-		t.Attribs.MeleeDamage, _ = strconv.Atoi(t.Attributes["mCharMeleeProp.meleeDamage"])
-		t.Attribs.Stamina, _ = strconv.Atoi(t.Attributes["mVICProf.maxStamina"])
-		t.Attribs.ShieldRechargeDelay, _ = strconv.Atoi(t.Attributes["mVICProp.shieldRechargeDelay"])
-		t.Attribs.ShieldRechargeDepleted, _ = strconv.Atoi(t.Attributes["mVICProp.shieldRechargePauseOnShieldDepleted"])
-		t.Attribs.ShieldRechargeRate, _ = strconv.Atoi(t.Attributes["mVICProp.healShieldRate"])
-		t.Attribs.HackSpeedFactor, _ = strconv.Atoi(t.Attributes["mHackSpeedFactor"])
+
+		t.Attribs.ArmorRepair, _ = strconv.ParseFloat(t.Attributes["mVICProp.healArmorRate"], 64)
+		t.Attribs.ScanPrecision, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanPrecision"], 64)
+		t.Attribs.ScanProfile, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanProfile"], 64)
+		t.Attribs.ScanRadius, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanRadius"], 64)
+		t.Attribs.MeleeDamage, _ = strconv.ParseFloat(t.Attributes["mCharMeleeProp.meleeDamage"], 64)
+		t.Attribs.Stamina, _ = strconv.ParseFloat(t.Attributes["mVICProf.maxStamina"], 64)
+		t.Attribs.ShieldRechargeDelay, _ = strconv.ParseFloat(t.Attributes["mVICProp.shieldRechargeDelay"], 64)
+		t.Attribs.ShieldRechargeDepleted, _ = strconv.ParseFloat(t.Attributes["mVICProp.shieldRechargePauseOnShieldDepleted"], 64)
+		t.Attribs.ShieldRechargeRate, _ = strconv.ParseFloat(t.Attributes["mVICProp.healShieldRate"], 64)
+		t.Attribs.HackSpeedFactor, _ = strconv.ParseFloat(t.Attributes["mHackSpeedFactor"], 64)
 	} else if t.HasTag(category.Tag_weapon) {
 		t.Attribs.CPU, _ = strconv.Atoi(t.Attributes["mVICProp.amountCpuUsage"])
 		t.Attribs.PG, _ = strconv.Atoi(t.Attributes["mVICProp.amountPowerUsage"])
-		t.Attribs.AbsoluteRange, _ = strconv.Atoi(t.Attributes["mFireMode0.absoluteRange"])
-		t.Attribs.EffectiveRange, _ = strconv.Atoi(t.Attributes["mFireMode0.effectiveRange"])
-		t.Attribs.FireInterval, _ = strconv.Atoi(t.Attributes["mFireMode0.fireInterval"])
-		t.Attribs.Damage, _ = strconv.Atoi(t.Attributes["mFireMode0.instantHitDamage"])
-		t.Attribs.SplashDamage, _ = strconv.Atoi(t.Attributes["mFireMode0.instantHitSplashDamage"])
-		t.Attribs.SplashRadius, _ = strconv.Atoi(t.Attributes["mFireMode0.instantHitSplashDamageRadius"])
+		t.Attribs.AbsoluteRange, _ = strconv.ParseFloat(t.Attributes["mFireMode0.absoluteRange"], 64)
+		t.Attribs.EffectiveRange, _ = strconv.ParseFloat(t.Attributes["mFireMode0.effectiveRange"], 64)
+		t.Attribs.FireInterval, _ = strconv.ParseFloat(t.Attributes["mFireMode0.fireInterval"], 64)
+		t.Attribs.Damage, _ = strconv.ParseFloat(t.Attributes["mFireMode0.instantHitDamage"], 64)
+		t.Attribs.SplashDamage, _ = strconv.ParseFloat(t.Attributes["mFireMode0.instantHitSplashDamage"], 64)
+		t.Attribs.SplashRadius, _ = strconv.ParseFloat(t.Attributes["mFireMode0.instantHitSplashDamageRadius"], 64)
 		t.Attribs.ShotCost, _ = strconv.Atoi(t.Attributes["mFireMode0.shotCost"])
 		t.Attribs.ShotPerRound, _ = strconv.Atoi(t.Attributes["mFireMode0.shotPerRound"])
 	}
 }
 
-func (t *SDEType) applyAttributeToType(attribute string, value int, method string, level int) {
-	defer TimeFunction(time.Now(), t.GetName()+".applyAttributeToType("+attribute+", "+strconv.Itoa(value)+", "+method+", "+strconv.Itoa(level)+")")
+func (t *SDEType) applyAttributeToType(attribute string, value float64, method string, level int) {
+	defer TimeFunction(time.Now(), t.GetName()+".applyAttributeToType("+attribute+", "+strconv.FormatFloat(value, 'f', 6, 64)+", "+method+", "+strconv.Itoa(level)+")")
+	fmt.Println("Applying attribute", attribute)
 	for k, _ := range t.Attributes {
 		if k == attribute { // found
-			ov, _ := strconv.Atoi(t.Attributes[k])
-			value = value * level
-			if method == "ADD" {
-				value += ov
-			} else {
-				value -= ov
+			ov, _ := strconv.ParseFloat(t.Attributes[k], 64)
+			switch method {
+			case "ADD":
+				value = value * float64(level)
+				value += float64(ov)
+			case "SUB":
+				value = value * float64(level)
+				value -= float64(ov)
+			case "MULTIPLY":
+				v := float64(0)
+				if value > 1 {
+					v = (100 * value) - 100
+				} else {
+					v = 100 - (100 * value)
+				}
+				y := (v * float64(level)) / 100
+				value = ov - (y * ov)
+			default:
+				fmt.Println("Unknown attribute method", method)
 			}
-			t.Attributes[k] = strconv.Itoa(value)
+			t.Attributes[k] = strconv.FormatFloat(value, 'f', 2, 64)
 		}
 	}
 	t.ApplyAttributesToType() // Fix values in t.Attribs
@@ -83,6 +99,7 @@ func (t *SDEType) getAllSkills() {
 				t.Skills[sname] = t.Attributes["requiredSkills."+skillint+".skillTypeID"] + "|" + t.Attributes["requiredSkills."+skillint+".skillLevel"] // allows for easy spliting  typenames won't have | in it.  May change to 0x0 but this works
 
 			}
+
 		}
 	}
 	for _, v := range t.Skills {
@@ -104,8 +121,9 @@ func (t *SDEType) skillApply(skillTID int, level int) {
 			modint := strings.Split(k, ".")[1]
 			attrib := b.Attributes["modifier."+modint+".attributeName"]
 			method := b.Attributes["modifier."+modint+".modifierType"]
-			value, _ := strconv.Atoi(b.Attributes["modifier."+modint+".modifierValue"])
-			if attrib == "" || method == "" || value == 0 {
+			value, _ := strconv.ParseFloat(b.Attributes["modifier."+modint+".modifierValue"], 64)
+			if attrib == "" || method == "" {
+				fmt.Println("ERROR: Found broken modifer")
 				continue
 			}
 			t.applyAttributeToType(attrib, value, method, level)
@@ -129,6 +147,7 @@ func (t *SDEType) ApplySkillsToType() {
 		}
 	}
 	t.Skills = Skills // add initial skills
-	t.getAllSkills()  // finish getting rest of skills recusivly
-  t.ApplyAttributesToType()
+	t.getAllSkills()  // finish getting rest of skills recusivlyi
+	fmt.Println(t.Skills)
+	t.ApplyAttributesToType()
 }
