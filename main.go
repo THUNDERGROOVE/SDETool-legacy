@@ -20,7 +20,7 @@ func main() {
 	util.TimeFunc = *args.TimeExecution
 	util.DebugLog = *args.Debug
 	util.SDEVersion = *args.SDEVersion
-	util.LErr("Error test")
+	util.Info("Debug logging on")
 	util.CheckFile()
 	util.DBInitialize()
 	// Change to select switch?
@@ -38,6 +38,11 @@ func main() {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
 		t.ApplySkillsToType()
+		if *args.ApplyModule != "" { // Apply the module to a suit if we can
+			g := util.ResolveInput(*args.ApplyModule)
+			m := util.GetSDETypeID(g)
+			t.ApplyModuleToSuit(m)
+		}
 		t.PrintInfo()
 		if *args.GetMarketData {
 			fmt.Println("===== Market Report =====")

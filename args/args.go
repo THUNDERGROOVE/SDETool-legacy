@@ -14,15 +14,16 @@ var (
 	InfoFlag         *string // InfoFlag is used to provide an int to display info about a type
 	Damage           *string // Damage is used to provide a TypeID to calculate damage of a weapon
 	SDEVersion       *string // Version of the SDE to force
-	VerboseInfo      *bool   // If our info should print as much data about a type that we can
-	LicenseFlag      *bool   // Print Licensing information
-	VersionFlag      *bool   // Print current version
-	SlowFlag         *bool   // Don't use optimizations
-	TimeExecution    *bool   // Should we time our functions?
-	Clean            *bool   // Cleans cache and database files
-	DumpTypes        *bool   // Dumps all types to a file for use with category.go
-	GetMarketData    *bool   // Flag used if getting market data with -i
-	RunServer        *bool   // Runs a server for hosting the web version of SDETool
+	ApplyModule      *string
+	VerboseInfo      *bool // If our info should print as much data about a type that we can
+	LicenseFlag      *bool // Print Licensing information
+	VersionFlag      *bool // Print current version
+	SlowFlag         *bool // Don't use optimizations
+	TimeExecution    *bool // Should we time our functions?
+	Clean            *bool // Cleans cache and database files
+	DumpTypes        *bool // Dumps all types to a file for use with category.go
+	GetMarketData    *bool // Flag used if getting market data with -i
+	RunServer        *bool // Runs a server for hosting the web version of SDETool
 	Debug            *bool
 	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
 	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
@@ -42,7 +43,9 @@ func Init() {
 	TimeExecution = flag.Bool("time", false, "Times the execution of functions that may take a decent amount of time")
 	Clean = flag.Bool("clean", false, "Cleans all database and cache files")
 	DumpTypes = flag.Bool("dump", false, "Dumps all types to a file for use with the category package")
-	GetMarketData = flag.Bool("m", false, "Gets market data on item, used with -i. Sorry CCP if I'm pounding your APIs ;P")
+	ApplyModule = flag.String("m", "", "Used with -i to apply a module to a dropsuit")
+
+	GetMarketData = flag.Bool("market", false, "Gets market data on item, used with -i. Sorry CCP if I'm pounding your APIs ;P")
 	Debug = flag.Bool("debug", false, "Debug? Debug!")
 
 	// Damage and mod counts

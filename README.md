@@ -146,3 +146,4 @@ TODO
 ====
 
 1. <del>More calculations like damage for things like dampening, range amps, speed, etc.</del>  (Implemented GenericCalculateValue, should make it easier when I get to it)
+1. Fix math for skill applications, ocasionally it'll break

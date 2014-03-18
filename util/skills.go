@@ -6,7 +6,6 @@ package util
 */
 
 import (
-	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
 	"strconv"
 	"strings"
@@ -35,7 +34,8 @@ func (t *SDEType) ApplyAttributesToType() { // t.Attribs. = t.Attributes[""]
 		t.Attribs.ScanProfile, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanProfile"], 64)
 		t.Attribs.ScanRadius, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanRadius"], 64)
 		t.Attribs.MeleeDamage, _ = strconv.ParseFloat(t.Attributes["mCharMeleeProp.meleeDamage"], 64)
-		t.Attribs.Stamina, _ = strconv.ParseFloat(t.Attributes["mVICProf.maxStamina"], 64)
+		t.Attribs.Stamina, _ = strconv.ParseFloat(t.Attributes["mCharProp.maxStamina"], 64)
+		t.Attribs.StaminaRecovery, _ = strconv.ParseFloat(t.Attributes["mCharProp.staminaRecoveryPerSecond"], 64)
 		t.Attribs.ShieldRechargeDelay, _ = strconv.ParseFloat(t.Attributes["mVICProp.shieldRechargeDelay"], 64)
 		t.Attribs.ShieldRechargeDepleted, _ = strconv.ParseFloat(t.Attributes["mVICProp.shieldRechargePauseOnShieldDepleted"], 64)
 		t.Attribs.ShieldRechargeRate, _ = strconv.ParseFloat(t.Attributes["mVICProp.healShieldRate"], 64)
@@ -55,8 +55,8 @@ func (t *SDEType) ApplyAttributesToType() { // t.Attribs. = t.Attributes[""]
 }
 
 func (t *SDEType) applyAttributeToType(attribute string, value float64, method string, level int) {
-	defer TimeFunction(time.Now(), t.GetName()+".applyAttributeToType("+attribute+", "+strconv.FormatFloat(value, 'f', 6, 64)+", "+method+", "+strconv.Itoa(level)+")")
-	fmt.Println("Applying attribute", attribute)
+	defer TimeFunction(time.Now(), t.GetName()+".applyAttributeToType("+attribute+", "+strconv.FormatFloat(value, 'f', 6, 64)+", "+method+", "+strconv.Itoa(level)+") "+method)
+	Info("Applying attribute " + attribute)
 	for k, _ := range t.Attributes {
 		if k == attribute { // found
 			ov, _ := strconv.ParseFloat(t.Attributes[k], 64)
@@ -75,9 +75,14 @@ func (t *SDEType) applyAttributeToType(attribute string, value float64, method s
 					v = 100 - (100 * value)
 				}
 				y := (v * float64(level)) / 100
-				value = ov - (y * ov)
+				if value > 1 {
+					value = ov + (y * ov)
+				} else {
+					value = ov - (y * ov)
+				}
+				Info("Method: " + method + " Original value: " + strconv.FormatFloat(ov, 'f', 4, 64) + " v: " + strconv.FormatFloat(v, 'f', 4, 64) + " y: (v * float64(level)) / 100): " + strconv.FormatFloat(y, 'f', 4, 64) + " Output value: " + strconv.FormatFloat(value, 'f', 4, 64))
 			default:
-				fmt.Println("Unknown attribute method", method)
+				LErr("Unknown attribute method" + method)
 			}
 			t.Attributes[k] = strconv.FormatFloat(value, 'f', 2, 64)
 		}
@@ -123,7 +128,7 @@ func (t *SDEType) skillApply(skillTID int, level int) {
 			method := b.Attributes["modifier."+modint+".modifierType"]
 			value, _ := strconv.ParseFloat(b.Attributes["modifier."+modint+".modifierValue"], 64)
 			if attrib == "" || method == "" {
-				fmt.Println("ERROR: Found broken modifer")
+				LErr("found broken modifer")
 				continue
 			}
 			t.applyAttributeToType(attrib, value, method, level)
@@ -148,6 +153,5 @@ func (t *SDEType) ApplySkillsToType() {
 	}
 	t.Skills = Skills // add initial skills
 	t.getAllSkills()  // finish getting rest of skills recusivlyi
-	fmt.Println(t.Skills)
 	t.ApplyAttributesToType()
 }

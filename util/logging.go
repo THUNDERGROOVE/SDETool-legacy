@@ -18,7 +18,7 @@ func LogInit() {
 	if err != nil {
 		panic("error opening log file")
 	}
-	Log = log.New(f, "", log.LstdFlags)
+	Log = log.New(f, "", log.Ltime)
 	Info("Log started!")
 	if DebugLog {
 		//log.SetOutput(os.Stderr)
@@ -42,6 +42,16 @@ func Info(s string) {
 		fmt.Println()
 	}
 	Log.SetPrefix("INFO ")
-	log.Println(s)
+	Log.Println(s)
+	log.SetPrefix("")
+}
+func Trace(s string) {
+	if DebugLog {
+		term.Green(os.Stderr, "Trace: "+s)
+		term.White(os.Stderr, "")
+		fmt.Println()
+	}
+	Log.SetPrefix("TRACE ")
+	Log.Println(s)
 	log.SetPrefix("")
 }

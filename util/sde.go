@@ -48,6 +48,7 @@ type TypeAttributes struct {
 	ShieldRechargeDepleted float64
 	HackSpeedFactor        float64
 	Stamina                float64
+	StaminaRecovery        float64
 	MeleeDamage            float64
 	ScanProfile            float64
 	ScanPrecision          float64
@@ -228,6 +229,7 @@ func (t *SDEType) PrintInfo() {
 		printFNotZero("-> Scan profile:", t.Attribs.ScanProfile)
 		printFNotZero("-> Scan radius:", t.Attribs.ScanRadius)
 		printFNotZero("-> Stamina:", t.Attribs.Stamina)
+		printFNotZero("-> Stamina recovery:", t.Attribs.StaminaRecovery)
 		printFNotZero("-> Melee damage", t.Attribs.MeleeDamage)
 
 	}
@@ -702,7 +704,6 @@ func GetTypeIDByDName(name string) int {
 		return 0
 	}
 	for rows.Next() {
-
 		var nTypeID int
 		var catmaAttributeName string
 		var catmaValueInt string
