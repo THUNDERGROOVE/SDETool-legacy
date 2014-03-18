@@ -230,8 +230,6 @@ func (t *SDEType) PrintInfo() {
 		printFNotZero("-> Stamina:", t.Attribs.Stamina)
 		printFNotZero("-> Melee damage", t.Attribs.MeleeDamage)
 
-	} else {
-		fmt.Println("Not a dropsuit")
 	}
 	if t.HasTag(category.Tag_weapon) {
 		fmt.Println("===== Weapon =====")
