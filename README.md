@@ -14,8 +14,10 @@ On Windows you will need a matching version of GCC which you can usually get fro
 
 In Linux you'll need build-essentials.  Installing it can depend on your distro however you should be able to figure this out if you need.
 ``` bash
-go get github.com/mattn/go-sqlite3
+make dep
 ```
+Should download our dependencies for you
+
 Then you should be able to
 ``` bash
 make
