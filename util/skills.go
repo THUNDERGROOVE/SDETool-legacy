@@ -15,7 +15,7 @@ import (
 /*TODO
   1) Finish implementing none additive modifiers
     * This includes the modiferBonus(?) that some skills have
-  2) Clean up our functions, they are very all over the place in naming and a lot of 
+  2) Clean up our functions, they are very all over the place in naming and a lot of
      them don't seem to be needed more than once?
 */
 

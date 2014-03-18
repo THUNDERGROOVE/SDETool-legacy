@@ -10,12 +10,11 @@ import (
 )
 
 const (
-  Version = 0.2
+	Version = 0.2
 )
 
-
 func main() {
-  util.CheckFile()
+	util.CheckFile()
 	args.Init()
 	util.VerboseInfo = *args.VerboseInfo
 	util.TimeFunc = *args.TimeExecution

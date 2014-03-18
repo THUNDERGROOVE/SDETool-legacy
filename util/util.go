@@ -6,13 +6,13 @@
 package util
 
 import (
-  "os"
-  "net/http"
-  "archive/zip"
-  "database/sql"
-  _"github.com/mattn/go-sqlite3"
+	"archive/zip"
+	"database/sql"
 	"fmt"
+	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
+	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
