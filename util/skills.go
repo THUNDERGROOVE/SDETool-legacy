@@ -6,6 +6,7 @@ package util
 */
 
 import (
+	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
 	"strconv"
 	"strings"
@@ -24,34 +25,42 @@ import (
 func (t *SDEType) ApplyAttributesToType() { // t.Attribs. = t.Attributes[""]
 	defer TimeFunction(time.Now(), t.GetName()+".ApplyAttributesToType()")
 	if t.HasTag(category.Tag_dropsuit) {
-		t.Attribs.CPU, _ = strconv.Atoi(t.Attributes["mVICProp.maxCpuReserve"])
-		t.Attribs.PG, _ = strconv.Atoi(t.Attributes["mVICProp.maxPowerReserve"])
-		t.Attribs.Armor, _ = strconv.Atoi(t.Attributes["mVICProp.maxArmor"])
-		t.Attribs.Shields, _ = strconv.Atoi(t.Attributes["mVICProp.maxShields"])
+		t.Attribs.CPU = parseFloat("mVICProp.maxCpuReserve", t)
+		t.Attribs.PG = parseFloat("mVICProp.maxPowerReserve", t)
+		t.Attribs.Armor = parseFloat("mVICProp.maxArmor", t)
+		t.Attribs.Shields = parseFloat("mVICProp.maxShield", t)
 
-		t.Attribs.ArmorRepair, _ = strconv.ParseFloat(t.Attributes["mVICProp.healArmorRate"], 64)
-		t.Attribs.ScanPrecision, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanPrecision"], 64)
-		t.Attribs.ScanProfile, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanProfile"], 64)
-		t.Attribs.ScanRadius, _ = strconv.ParseFloat(t.Attributes["mVICProp.signatureScanRadius"], 64)
-		t.Attribs.MeleeDamage, _ = strconv.ParseFloat(t.Attributes["mCharMeleeProp.meleeDamage"], 64)
-		t.Attribs.Stamina, _ = strconv.ParseFloat(t.Attributes["mCharProp.maxStamina"], 64)
-		t.Attribs.StaminaRecovery, _ = strconv.ParseFloat(t.Attributes["mCharProp.staminaRecoveryPerSecond"], 64)
-		t.Attribs.ShieldRechargeDelay, _ = strconv.ParseFloat(t.Attributes["mVICProp.shieldRechargeDelay"], 64)
-		t.Attribs.ShieldRechargeDepleted, _ = strconv.ParseFloat(t.Attributes["mVICProp.shieldRechargePauseOnShieldDepleted"], 64)
-		t.Attribs.ShieldRechargeRate, _ = strconv.ParseFloat(t.Attributes["mVICProp.healShieldRate"], 64)
-		t.Attribs.HackSpeedFactor, _ = strconv.ParseFloat(t.Attributes["mHackSpeedFactor"], 64)
+		t.Attribs.ArmorRepair = parseFloat("mVICProp.healArmorRate", t)
+		t.Attribs.ScanPrecision = parseFloat("mVICProp.signatureScanPrecision", t)
+		t.Attribs.ScanProfile = parseFloat("mVICProp.signatureScanProfile", t)
+		t.Attribs.ScanRadius = parseFloat("mVICProp.signatureScanRadius", t)
+		t.Attribs.MeleeDamage = parseFloat("mCharMeleeProp.meleeDamage", t)
+		t.Attribs.Stamina = parseFloat("mCharProp.maxStamina", t)
+		t.Attribs.StaminaRecovery = parseFloat("mCharProp.staminaRecoveryPerSecond", t)
+		t.Attribs.ShieldRechargeDelay = parseFloat("mVICProp.shieldRechargeDelay", t)
+		t.Attribs.ShieldRechargeDepleted = parseFloat("mVICProp.shieldRechargePauseOnShieldDepleted", t)
+		t.Attribs.ShieldRechargeRate = parseFloat("mVICProp.healShieldRate", t)
+		t.Attribs.HackSpeedFactor = parseFloat("mHackSpeedFactor", t)
 	} else if t.HasTag(category.Tag_weapon) {
-		t.Attribs.CPU, _ = strconv.Atoi(t.Attributes["mVICProp.amountCpuUsage"])
-		t.Attribs.PG, _ = strconv.Atoi(t.Attributes["mVICProp.amountPowerUsage"])
-		t.Attribs.AbsoluteRange, _ = strconv.ParseFloat(t.Attributes["mFireMode0.absoluteRange"], 64)
-		t.Attribs.EffectiveRange, _ = strconv.ParseFloat(t.Attributes["mFireMode0.effectiveRange"], 64)
-		t.Attribs.FireInterval, _ = strconv.ParseFloat(t.Attributes["mFireMode0.fireInterval"], 64)
-		t.Attribs.Damage, _ = strconv.ParseFloat(t.Attributes["mFireMode0.instantHitDamage"], 64)
-		t.Attribs.SplashDamage, _ = strconv.ParseFloat(t.Attributes["mFireMode0.instantHitSplashDamage"], 64)
-		t.Attribs.SplashRadius, _ = strconv.ParseFloat(t.Attributes["mFireMode0.instantHitSplashDamageRadius"], 64)
+		t.Attribs.AbsoluteRange = parseFloat("mFireMode0.absoluteRange", t)
+		t.Attribs.EffectiveRange = parseFloat("mFireMode0.effectiveRange", t)
+		t.Attribs.FireInterval = parseFloat("mFireMode0.fireInterval", t)
+		t.Attribs.Damage = parseFloat("mFireMode0.instantHitDamage", t)
+		t.Attribs.SplashDamage = parseFloat("mFireMode0.instantHitSplashDamage", t)
+		t.Attribs.SplashRadius = parseFloat("mFireMode0.instantHitSplashDamageRadius", t)
+		t.Attribs.CPU = parseFloat("mVICProp.amountCpuUsage", t)
+		t.Attribs.PG = parseFloat("mVICProp.amountPowerUsage", t)
 		t.Attribs.ShotCost, _ = strconv.Atoi(t.Attributes["mFireMode0.shotCost"])
 		t.Attribs.ShotPerRound, _ = strconv.Atoi(t.Attributes["mFireMode0.shotPerRound"])
 	}
+}
+
+func parseFloat(s string, t *SDEType) float64 {
+	v, err := strconv.ParseFloat(t.Attributes[s], 64)
+	if err != nil {
+		LErr(fmt.Sprint("Error Parsing float from ", s, " value ", t.Attributes[s], " error: "+err.Error()))
+	}
+	return v
 }
 
 func (t *SDEType) applyAttributeToType(attribute string, value float64, method string, level int) {
@@ -59,11 +68,12 @@ func (t *SDEType) applyAttributeToType(attribute string, value float64, method s
 	Info("Applying attribute " + attribute)
 	for k, _ := range t.Attributes {
 		if k == attribute { // found
-			ov, _ := strconv.ParseFloat(t.Attributes[k], 64)
+			ov := parseFloat(k, t)
 			switch method {
 			case "ADD":
 				value = value * float64(level)
 				value += float64(ov)
+				Info(fmt.Sprint("Method ADD new value", value))
 			case "SUB":
 				value = value * float64(level)
 				value -= float64(ov)
@@ -126,7 +136,7 @@ func (t *SDEType) skillApply(skillTID int, level int) {
 			modint := strings.Split(k, ".")[1]
 			attrib := b.Attributes["modifier."+modint+".attributeName"]
 			method := b.Attributes["modifier."+modint+".modifierType"]
-			value, _ := strconv.ParseFloat(b.Attributes["modifier."+modint+".modifierValue"], 64)
+			value := parseFloat("modifier."+modint+".modifierValue", &b)
 			if attrib == "" || method == "" {
 				LErr("found broken modifer")
 				continue

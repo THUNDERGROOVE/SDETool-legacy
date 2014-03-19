@@ -11,6 +11,7 @@ import (
 var (
 	Log      *log.Logger
 	DebugLog bool
+	Color    bool
 )
 
 func LogInit() {
@@ -18,6 +19,7 @@ func LogInit() {
 	if err != nil {
 		panic("error opening log file")
 	}
+	Color = true
 	Log = log.New(f, "", log.Ltime)
 	Info("Log started!")
 	if DebugLog {
@@ -27,8 +29,11 @@ func LogInit() {
 
 func LErr(s string) {
 	if DebugLog {
-		term.Red(os.Stderr, "Error: "+s)
-		term.White(os.Stderr, "")
+		if Color {
+			term.Red(os.Stderr, "Error: "+s)
+		} else {
+			fmt.Print("Error: " + s)
+		}
 		fmt.Println()
 	}
 	Log.SetPrefix("WARN ")
@@ -37,8 +42,12 @@ func LErr(s string) {
 }
 func Info(s string) {
 	if DebugLog {
-		term.Cyan(os.Stderr, "Info: "+s)
-		term.White(os.Stderr, "")
+		if Color {
+			term.Cyan(os.Stderr, "Info: "+s)
+
+		} else {
+			fmt.Print("Info: " + s)
+		}
 		fmt.Println()
 	}
 	Log.SetPrefix("INFO ")
@@ -47,8 +56,12 @@ func Info(s string) {
 }
 func Trace(s string) {
 	if DebugLog {
-		term.Green(os.Stderr, "Trace: "+s)
-		term.White(os.Stderr, "")
+		if Color {
+			term.Green(os.Stderr, "Trace: "+s)
+
+		} else {
+			fmt.Print("Trace: " + s)
+		}
 		fmt.Println()
 	}
 	Log.SetPrefix("TRACE ")

@@ -4,6 +4,7 @@ import (
 	//"database/sql"
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
+	"github.com/joshlf13/term"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"strconv"
@@ -23,6 +24,7 @@ type SDEType struct {
 	Class          string
 	Attributes     map[string]string
 	Skills         map[string]string
+	Modules        []SDEType
 	Attribs        TypeAttributes
 	Tags           []int
 	HighModules    int
@@ -38,10 +40,10 @@ type SDEType struct {
 
 // TypeAttributes is used to store information about a type such as HP, CPU, PG, etc.
 type TypeAttributes struct {
-	Shields                int /* Suits */
-	Armor                  int
-	CPU                    int /* Applies to useage as well on items */
-	PG                     int /* Same as above */
+	Shields                float64 /* Suits */
+	Armor                  float64
+	CPU                    float64 /* Applies to useage as well on items */
+	PG                     float64 /* Same as above */
 	ArmorRepair            float64
 	ShieldRechargeRate     float64
 	ShieldRechargeDelay    float64
@@ -66,6 +68,7 @@ type TypeAttributes struct {
 // GetRawDamage returns raw damages with prof and damage mods taken into account
 // Doesn't work on swarms or anything that gets damage from it's projectile __yet__
 func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, BasicModCount int) float64 {
+	defer TimeFunction(time.Now(), fmt.Sprint("GetRawDamage(", ProfLvl, ComplexModCount, EnhancedModCount, BasicModCount, ")"))
 	// Slice of ints, used to pass all the damage modifier values to GenericCalculateValue
 	m := []int{}
 	for i := 0; i < ComplexModCount; i++ {
@@ -92,6 +95,7 @@ func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, Basic
 // Requires that you give it at least a string that gets a value from t.Attributes
 // which must be convertable to an int, will throw an error if unable to.
 func (t *SDEType) GenericCalculateValue(ValueAttribute string, HighOrLow bool, Modifiers ...[]int) (float64, error) {
+	defer TimeFunction(time.Now(), fmt.Sprint("GenericCalculateValue(", ValueAttribute, HighOrLow, Modifiers, ")"))
 	BaseValue, err := strconv.ParseFloat(t.Attributes[ValueAttribute], 64)
 	if err != nil {
 		return BaseValue, err
@@ -169,6 +173,7 @@ func (t *SDEType) Category() int {
 }
 
 func (t *SDEType) PrintDamageChart() {
+	defer TimeFunction(time.Now(), "PrintDamageChart()")
 	if t.HasTag(category.Tag_weapon) == false {
 		fmt.Println("This is not a weapon")
 		return
@@ -198,6 +203,7 @@ func (t *SDEType) PrintDamageChart() {
 
 // PrintInfo is a generic function to print the info of an SDEType
 func (t *SDEType) PrintInfo() {
+	defer TimeFunction(time.Now(), "PrintInfo()")
 	fmt.Println("Getting stats on " + t.GetName())
 	if t.GetDescription() != "" {
 		fmt.Println("===== Description =====")
@@ -213,15 +219,15 @@ func (t *SDEType) PrintInfo() {
 	}
 	if t.HasTag(category.Tag_dropsuit) {
 		fmt.Println("===== Dropsuit =====")
-		printNotZero("-> Shields:", t.Attribs.Shields)
-		printNotZero("-> Armor:", t.Attribs.Armor)
+		printFNotZero("-> Shields:", t.Attribs.Shields)
+		printFNotZero("-> Armor:", t.Attribs.Armor)
 		printNotZero("-> Heavy Weapons:", t.HeavyWeapons)
 		printNotZero("-> Light Weapons:", t.LightWeapons)
 		printNotZero("-> Sidearms:", t.Sidearms)
-		printNotZero("-> Equipment slots:", t.EquipmentSlots)
-		printNotZero("-> High slots:", t.HighModules)
-		printNotZero("-> Low slots:", t.LowModules)
-		printFNotZero("-> Repair rate:", t.Attribs.ArmorRepair)
+		fmt.Println("-> Equipment slots:", t.EquipmentSlots)
+		fmt.Println("-> High slots:", t.HighModules)
+		fmt.Println("-> Low slots:", t.LowModules)
+		fmt.Println("-> Repair rate:", t.Attribs.ArmorRepair)
 		printFNotZero("-> Shield recharge rate:", t.Attribs.ShieldRechargeRate)
 		printFNotZero("-> Shield recharge delay:", t.Attribs.ShieldRechargeDelay)
 		printFNotZero("-> Shield depleted delay:", t.Attribs.ShieldRechargeDepleted)
@@ -231,7 +237,18 @@ func (t *SDEType) PrintInfo() {
 		printFNotZero("-> Stamina:", t.Attribs.Stamina)
 		printFNotZero("-> Stamina recovery:", t.Attribs.StaminaRecovery)
 		printFNotZero("-> Melee damage", t.Attribs.MeleeDamage)
-
+	}
+	if len(t.Modules) > 0 {
+		if Color && t.ModulesAreValid() == false {
+			term.Red(os.Stdout, "===== Applied Modules =====")
+			fmt.Println()
+			fmt.Println("\tNot enough slots to apply the selected modules, calculated anyways.")
+		} else {
+			fmt.Println("===== Applied Modules =====")
+		}
+		for _, v := range t.Modules {
+			fmt.Println("->", v.GetName())
+		}
 	}
 	if t.HasTag(category.Tag_weapon) {
 		fmt.Println("===== Weapon =====")
@@ -321,6 +338,7 @@ func (t *SDEType) StringInfo() string {
 // GetSDETypeID returns an SDEType by typeID
 // Currently bottlenecking our GetSDEWhereNameContains takes ~ 300 ms to execute
 func GetSDETypeID(TID int) SDEType {
+	defer TimeFunction(time.Now(), fmt.Sprint("GetSDETypeID(", TID, ")"))
 	if TID == 0 {
 		fmt.Println("Unable to find type by ID type lookup failed, make sure the name provided actually exists")
 		os.Exit(1)
@@ -385,6 +403,7 @@ func GetSDETypeID(TID int) SDEType {
 // GetSDETypeIDFast returns an SDEType by typeID
 // Doesn't get tag or module info use when you just need base info
 func GetSDETypeIDFast(TID int) SDEType {
+	defer TimeFunction(time.Now(), fmt.Sprint("GetSDETypeIDFast(", TID, ")"))
 	// Get ID
 	var err error
 	rows, err := db.Query("SELECT * FROM CatmaTypes WHERE typeID == " + strconv.Itoa(TID))
@@ -725,6 +744,7 @@ func GetTypeIDByDName(name string) int {
 // _GetTags is a helper function to apply the tags of a type to an SDEType
 // Bottlenecking, 100ms execution time
 func (t *SDEType) _GetTags() {
+	defer TimeFunction(time.Now(), "_GetTags()")
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(t.TypeID) + " AND catmaAttributeName LIKE 'tag.%'")
 	if err != nil {
 		fmt.Println("Error getting tags", err.Error())
@@ -751,6 +771,7 @@ func (t *SDEType) _GetTags() {
 // _GetModules is a helper function to add the module counts to an SDEType
 // Bottlenecking, 100ms execution time
 func (t *SDEType) _GetModules() {
+	defer TimeFunction(time.Now(), "_GetModules()")
 	rows, err := db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(t.TypeID) + " AND catmaAttributeName LIKE 'mModuleSlots.%'")
 	if err != nil {
 		fmt.Println("Error getting tags", err.Error())

@@ -7,6 +7,7 @@ import (
 	"github.com/THUNDERGROOVE/SDETool/server"
 	"github.com/THUNDERGROOVE/SDETool/util"
 	"os"
+	"time"
 )
 
 const (
@@ -14,6 +15,7 @@ const (
 )
 
 func main() {
+	defer util.TimeFunction(time.Now(), "main()")
 	util.LogInit()
 	args.Init()
 	util.VerboseInfo = *args.VerboseInfo

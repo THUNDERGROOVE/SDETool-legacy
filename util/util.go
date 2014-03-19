@@ -22,9 +22,8 @@ var (
 func TimeFunction(start time.Time, name string) {
 	elapsed := time.Since(start)
 	if TimeFunc {
-		fmt.Printf("%s took %s\n", name, elapsed)
+		Trace(fmt.Sprintf("%s took %s", name, elapsed))
 	}
-	Trace(name)
 }
 
 const (
