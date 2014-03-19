@@ -78,6 +78,7 @@ func (t *SDEType) applyAttributeToType(attribute string, value float64, method s
 				value = value * float64(level)
 				value -= float64(ov)
 			case "MULTIPLY":
+				// This is all wrong, I know.
 				v := float64(0)
 				if value > 1 {
 					v = (100 * value) - 100
