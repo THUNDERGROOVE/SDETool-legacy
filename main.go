@@ -14,6 +14,10 @@ const (
 	Version = 0.2
 )
 
+var (
+	BuildDate string
+)
+
 func main() {
 	defer util.TimeFunction(time.Now(), "main()")
 	util.LogInit()
@@ -30,7 +34,13 @@ func main() {
 		util.PrintLicense()
 	} else if *args.VersionFlag {
 		fmt.Println("SDETool version", Version)
+		if BuildDate != "" {
+			fmt.Println("Built on: ", BuildDate)
+		} else {
+			fmt.Println("No build date specified in binary")
+		}
 	} else if *args.RunServer {
+		*args.Debug = true
 		server.RunServer()
 	} else if *args.SearchFlag != "" {
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")

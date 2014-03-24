@@ -1,15 +1,11 @@
 all:
 	go fmt github.com/THUNDERGROOVE/SDETool
 	go build -v github.com/THUNDERGROOVE/SDETool
-	go install github.com/THUNDERGROOVE/SDETool/category
-	go install github.com/THUNDERGROOVE/SDETool/util
-	go install github.com/THUNDERGROOVE/SDETool/args
+date:
+	go build -v -ldflags "-X main.BuildDate \"%date%  %time%\"" github.com/THUNDERGROOVE/SDETool
 clean:
 	rm dustSDE.db.zip
 	rm dustSDE.db
-test:
-	go test -v
-	go test -bench .
 dep:
 	go get github.com/joshlf13/term
 	go install github.com/joshlf13/term
