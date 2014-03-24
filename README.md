@@ -1,7 +1,7 @@
 SDETool
 =======
 
-Uses the Dust514 **S**tatic **D**ata **E**xport to poll for info.
+Uses the Dust514 __S__tatic __D__ata __E__xport to poll for info.
 
 Highly unoptimized for now however it should be fairly stable(hopefully).
 
