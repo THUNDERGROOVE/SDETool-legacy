@@ -23,6 +23,7 @@ type SDEType struct {
 	TypeName       string
 	Class          string
 	Attributes     map[string]string
+	BaseAttributes map[string]string
 	Skills         map[string]string
 	Modules        []SDEType
 	Attribs        TypeAttributes
@@ -362,6 +363,7 @@ func GetSDETypeID(TID int) SDEType {
 	sde.TypeID = typeID
 	sde.TypeName = typeName
 	sde.Attributes = make(map[string]string)
+	sde.BaseAttributes = make(map[string]string)
 
 	// Get attributes
 	rows, err = db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(typeID))
@@ -393,6 +395,7 @@ func GetSDETypeID(TID int) SDEType {
 		if catmaValueText != "None" {
 			sde.Attributes[catmaAttributeName] = string(catmaValueText)
 		}
+		sde.BaseAttributes = sde.Attributes
 
 	}
 	sde._GetTags()
@@ -423,6 +426,7 @@ func GetSDETypeIDFast(TID int) SDEType {
 	sde.TypeID = typeID
 	sde.TypeName = typeName
 	sde.Attributes = make(map[string]string)
+	sde.BaseAttributes = make(map[string]string)
 
 	// Get attributes
 	rows, err = db.Query("SELECT * FROM CatmaAttributes WHERE typeID == " + strconv.Itoa(typeID) + " AND catmaAttributeName == 'mDisplayName'")
@@ -454,6 +458,7 @@ func GetSDETypeIDFast(TID int) SDEType {
 		if catmaValueText != "None" {
 			sde.Attributes[catmaAttributeName] = string(catmaValueText)
 		}
+		sde.BaseAttributes = sde.Attributes
 
 	}
 	return sde

@@ -1,0 +1,71 @@
+{
+  "clf-version": 0,
+  "X-clf-type": "DUST",
+  "X-generatedby": "DUST.Thang.Dk",
+  "X-dust_thang_dk-ID": 669,
+  "metadata": {
+    "title": "Logistics gk.0",
+    "description": "Logistics gk.0"
+  },
+  "ship": {
+    "typeid": 364034,
+    "typename": null
+  },
+  "presets": [
+    {
+      "presetname": "Logistics gk.0",
+      "modules": [
+        {
+          "typeid": 364785,
+          "slottype": "equip",
+          "index": 0
+        },
+        {
+          "typeid": 364784,
+          "slottype": "equip",
+          "index": 1
+        },
+        {
+          "typeid": 353253,
+          "slottype": "equip",
+          "index": 2
+        },
+        {
+          "typeid": 353251,
+          "slottype": "equip",
+          "index": 3
+        },
+        {
+          "typeid": 365443,
+          "slottype": "light",
+          "index": 0
+        },
+        {
+          "typeid": 355518,
+          "slottype": "low",
+          "index": 0
+        },
+        {
+          "typeid": 355518,
+          "slottype": "low",
+          "index": 1
+        },
+        {
+          "typeid": 365231,
+          "slottype": "low",
+          "index": 2
+        },
+        {
+          "typeid": 365231,
+          "slottype": "low",
+          "index": 3
+        },
+        {
+          "typeid": 365231,
+          "slottype": "low",
+          "index": 4
+        }
+      ]
+    }
+  ]
+}
