@@ -20,7 +20,7 @@ var (
 const (
 	// Constants
 	SDE1_7 = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.7_674383.zip"
-	SDE1_8 = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.8_739147.zip"
+	SDE1_8 = "http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.8_752135.zip" // Old: http://cdn1.eveonline.com/community/DUST_SDE/Uprising_1.8_739147.zip
 )
 
 func init() {
