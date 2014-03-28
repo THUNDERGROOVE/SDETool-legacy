@@ -146,4 +146,5 @@ TODO
 ====
 
 1. <del>More calculations like damage for things like dampening, range amps, speed, etc.</del>  (Implemented GenericCalculateValue, should make it easier when I get to it)
-1. Fix math for skill applications, ocasionally it'll break
+2. Fix math for skill applications, ocasionally it'll break
+3. Use an application directory for DB, log, zips and.  %APPDATA% for windows and .SDETool for linux/OSX
