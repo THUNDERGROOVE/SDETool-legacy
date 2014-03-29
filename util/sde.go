@@ -254,7 +254,7 @@ func (t *SDEType) PrintInfo() {
 	if t.HasTag(category.Tag_weapon) {
 		fmt.Println("===== Weapon =====")
 		printFNotZero("-> Damage", t.Attribs.Damage)
-		printFNotZero("-> Range", t.Attribs.AbsoluteRange)
+		printFNotZero("-> Range", t.Attribs.EffectiveRange)
 
 	}
 	if t.HasTag(category.TagVehicle) {

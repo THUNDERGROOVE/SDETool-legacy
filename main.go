@@ -6,12 +6,13 @@ import (
 	"github.com/THUNDERGROOVE/SDETool/args"
 	"github.com/THUNDERGROOVE/SDETool/server"
 	"github.com/THUNDERGROOVE/SDETool/util"
+	"io/ioutil"
 	"os"
 	"time"
 )
 
 const (
-	Version = 0.2
+	Version = 0.3
 )
 
 var (
@@ -20,12 +21,29 @@ var (
 
 func main() {
 	defer util.TimeFunction(time.Now(), "main()")
+	defer func() {
+		if r := recover(); r != nil {
+			util.DebugLog = true // Make it print and log always
+			fname := fmt.Sprintf("%s%s", time.Now().String(), "SDETool.panic")
+			util.LErr("Panic detected writing to file " + fname)
+			err := ioutil.WriteFile(fname, []byte(fmt.Sprintf("%v", r)), 0777)
+			if err != nil {
+				util.LErr("SUPER ERROR!?!?!?! Couldn't write panic log :/")
+			}
+			fmt.Println("Report this pls")
+			os.Exit(1)
+		}
+	}()
+	util.SetCWD()
 	util.LogInit()
 	args.Init()
+
+	// This set is to prevent some nasty nil pointer things if other programs import our packages.  Must be called as soon as possible to prevent errors
 	util.VerboseInfo = *args.VerboseInfo
 	util.TimeFunc = *args.TimeExecution
 	util.DebugLog = *args.Debug
 	util.SDEVersion = *args.SDEVersion
+
 	util.Info("Debug logging on")
 	util.CheckFile()
 	util.DBInitialize()
@@ -91,7 +109,10 @@ func main() {
 		util.DumpTypes()
 	} else if *args.GetMarketData && *args.InfoFlag == "" {
 		fmt.Println("The -m(arket) flag requires that you specifiy a type with -i")
+	} else if *args.ForcePanic {
+		util.ForcePanic()
 	} else {
+		util.PrintHeader()
 		flag.PrintDefaults()
 	}
 }

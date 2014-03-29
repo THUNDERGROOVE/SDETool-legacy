@@ -26,3 +26,4 @@ _testmain.go
 log.txt
 SDETool
 tmp.dat
+*.panic

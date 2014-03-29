@@ -25,6 +25,7 @@ var (
 	GetMarketData    *bool // Flag used if getting market data with -i
 	RunServer        *bool // Runs a server for hosting the web version of SDETool
 	Debug            *bool
+	ForcePanic       *bool
 	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
 	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
 	BasicModCount    *int // BasicModCount is used to calculate how many Basic mods to use
@@ -47,6 +48,7 @@ func Init() {
 
 	GetMarketData = flag.Bool("market", false, "Gets market data on item, used with -i. Sorry CCP if I'm pounding your APIs ;P")
 	Debug = flag.Bool("debug", false, "Debug? Debug!")
+	ForcePanic = flag.Bool("fp", false, "Forces a panic, debug uses")
 
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")

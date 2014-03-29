@@ -8,7 +8,9 @@ package util
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -144,4 +146,22 @@ func DumpTypes() {
 		f += cleanTypeName(s.GetName()) + " = " + strconv.Itoa(typeID) + "\n"
 	}
 	ioutil.WriteFile("typeDump.txt", []byte(f), 0777)
+}
+
+func PrintHeader() {
+	fmt.Println("SDETool written by Nick Powell")
+	fmt.Println("The multiplatform CLI tool for accessing data from the Dust514 SDE")
+}
+func ForcePanic() {
+	panic("Forced runtime panic")
+}
+func SetCWD() {
+	switch runtime.GOOS {
+	case "Windows":
+		os.Mkdir(os.Getenv("APPDATA")+"/.SDETool/", 0777)
+		os.Chdir(os.Getenv("APPDATA") + "/.SDETool/")
+	default:
+		os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
+		os.Chdir(os.Getenv("HOME") + "/.SDETool/")
+	}
 }
