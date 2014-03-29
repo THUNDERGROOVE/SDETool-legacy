@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/args"
+	"github.com/THUNDERGROOVE/SDETool/config"
 	"github.com/THUNDERGROOVE/SDETool/server"
 	"github.com/THUNDERGROOVE/SDETool/util"
 	"io/ioutil"
@@ -37,6 +38,7 @@ func main() {
 	util.SetCWD()
 	util.LogInit()
 	args.Init()
+	config.LoadConfig()
 
 	// This set is to prevent some nasty nil pointer things if other programs import our packages.  Must be called as soon as possible to prevent errors
 	util.VerboseInfo = *args.VerboseInfo
@@ -49,6 +51,9 @@ func main() {
 	util.DBInitialize()
 	// Change to select switch?
 	switch {
+	default:
+		util.PrintHeader()
+		flag.PrintDefaults()
 	case *args.LicenseFlag:
 		util.PrintLicense()
 		fallthrough
@@ -63,11 +68,19 @@ func main() {
 	case *args.RunServer:
 		*args.Debug = true
 		server.RunServer()
-	case *args.SearchFlag != "":
+	case *args.DumpTypes:
+		fmt.Println("Dumping types to text file :D")
+		util.DumpTypes()
+	case *args.GetMarketData && *args.InfoFlag == "":
+		fmt.Println("The -m(arket) flag requires that you specifiy a type with -i")
+	case *args.ForcePanic:
+		util.ForcePanic()
+	}
+	if *args.SearchFlag != "" {
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")
 		s := util.SearchSDEFlag(*args.SearchFlag)
 		fmt.Println(s)
-	case *args.InfoFlag != "":
+	} else if *args.InfoFlag != "" {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
 		t.ApplySkillsToType()
@@ -82,7 +95,7 @@ func main() {
 			a := t.GetTotalISKSpent()
 			fmt.Println("There has been", a, "ISK spent on", t.GetName())
 		}
-	case *args.Damage != "":
+	} else if *args.Damage != "" {
 		t := util.GetSDETypeID(util.ResolveInput(*args.Damage))
 		fmt.Println("Getting damage on: " + t.GetName())
 		if *args.ComplexModCount == 0 && *args.EnhancedModCount == 0 && *args.BasicModCount == 0 && *args.Prof == 0 {
@@ -103,15 +116,5 @@ func main() {
 		if *args.BasicModCount != 0 {
 			fmt.Println("->", *args.BasicModCount, "Complex damage modifiers")
 		}
-	case *args.DumpTypes:
-		fmt.Println("Dumping types to text file :D")
-		util.DumpTypes()
-	case *args.GetMarketData && *args.InfoFlag == "":
-		fmt.Println("The -m(arket) flag requires that you specifiy a type with -i")
-	case *args.ForcePanic:
-		util.ForcePanic()
-	default:
-		util.PrintHeader()
-		flag.PrintDefaults()
 	}
 }
