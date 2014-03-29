@@ -1,0 +1,35 @@
+
+SDETool version 0.3
+Built on:  Sat Mar 29 00:05:14 PDT 2014
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Getting stats on 80GJ Compressed Railgun
+===== Description =====
+The railgun weaponizes velocity by using magnetic fields to accelerate projectiles to hypersonic speeds. 
+-> Cost 100640 ISK
+===== Tags =====
+
+-> 352336 tag_turret
+
+-> 356447 tag_weapon_railgun
+
+-> 352789 tag_large
+
+-> 353511 tag_weaponclass_hybrid
+
+
