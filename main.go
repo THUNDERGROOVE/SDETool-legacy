@@ -48,23 +48,26 @@ func main() {
 	util.CheckFile()
 	util.DBInitialize()
 	// Change to select switch?
-	if *args.LicenseFlag {
+	switch {
+	case *args.LicenseFlag:
 		util.PrintLicense()
-	} else if *args.VersionFlag {
+		fallthrough
+	case *args.VersionFlag:
 		fmt.Println("SDETool version", Version)
 		if BuildDate != "" {
 			fmt.Println("Built on: ", BuildDate)
 		} else {
 			fmt.Println("No build date specified in binary")
 		}
-	} else if *args.RunServer {
+		fallthrough
+	case *args.RunServer:
 		*args.Debug = true
 		server.RunServer()
-	} else if *args.SearchFlag != "" {
+	case *args.SearchFlag != "":
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")
 		s := util.SearchSDEFlag(*args.SearchFlag)
 		fmt.Println(s)
-	} else if *args.InfoFlag != "" {
+	case *args.InfoFlag != "":
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
 		t.ApplySkillsToType()
@@ -79,7 +82,7 @@ func main() {
 			a := t.GetTotalISKSpent()
 			fmt.Println("There has been", a, "ISK spent on", t.GetName())
 		}
-	} else if *args.Damage != "" {
+	case *args.Damage != "":
 		t := util.GetSDETypeID(util.ResolveInput(*args.Damage))
 		fmt.Println("Getting damage on: " + t.GetName())
 		if *args.ComplexModCount == 0 && *args.EnhancedModCount == 0 && *args.BasicModCount == 0 && *args.Prof == 0 {
@@ -100,18 +103,14 @@ func main() {
 		if *args.BasicModCount != 0 {
 			fmt.Println("->", *args.BasicModCount, "Complex damage modifiers")
 		}
-	} else if *args.Clean {
-		fmt.Println("Cleaning SDETool directory")
-		os.Remove(util.SDEFile)
-		os.Remove(util.SDEFile + ".zip")
-	} else if *args.DumpTypes {
+	case *args.DumpTypes:
 		fmt.Println("Dumping types to text file :D")
 		util.DumpTypes()
-	} else if *args.GetMarketData && *args.InfoFlag == "" {
+	case *args.GetMarketData && *args.InfoFlag == "":
 		fmt.Println("The -m(arket) flag requires that you specifiy a type with -i")
-	} else if *args.ForcePanic {
+	case *args.ForcePanic:
 		util.ForcePanic()
-	} else {
+	default:
 		util.PrintHeader()
 		flag.PrintDefaults()
 	}
