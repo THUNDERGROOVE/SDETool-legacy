@@ -3,6 +3,9 @@
 *.a
 *.so
 
+# Junk files
+*.txt
+
 # Folders
 _obj
 _test

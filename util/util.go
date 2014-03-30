@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"regexp"
 	"runtime"
 	"strconv"
@@ -156,12 +157,41 @@ func ForcePanic() {
 	panic("Forced runtime panic")
 }
 func SetCWD() {
+	os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
+	os.Chdir(os.Getenv("HOME") + "/.SDETool/")
+}
+func Uninstall() {
+	var fname string
 	switch runtime.GOOS {
 	case "Windows":
-		os.Mkdir(os.Getenv("APPDATA")+"/.SDETool/", 0777)
-		os.Chdir(os.Getenv("APPDATA") + "/.SDETool/")
+		fname = "SDETool.exe"
 	default:
-		os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
-		os.Chdir(os.Getenv("HOME") + "/.SDETool/")
+		fname = "SDETool"
+	}
+	s, _ := exec.LookPath("SDETool")
+	if s == "" {
+		fmt.Println("No install of SDETool found\nUninstall aborted.")
+		return
+	}
+	err := os.Remove(s)
+	if err != nil {
+		LErr(err.Error())
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println("Would you like to cleanup the database files, cache and config?\n[y/n]")
+	var a string
+	fmt.Scanf("%s", &a)
+	if strings.ToLower(a) == "y" {
+		fmt.Println("Deleting SDETool data")
+		err1 := os.Remove(os.Getenv("HOME") + "/.SDETool/")
+		if err1 != nil {
+			fmt.Println("Unable to cleanup SDETool data:/")
+			LErr(err1.Error())
+			fmt.Println(err1.Error())
+			return
+		}
+	} else {
+		fmt.Println("DONE")
 	}
 }
