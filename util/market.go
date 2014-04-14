@@ -18,14 +18,14 @@ type MarketData struct {
 	Items []MarketDataEntry `json:"items"`
 }
 type MarketDataEntry struct {
-	AveragePrice     int    `json:"avgPrice"`
-	Date             string `json:"date"`
-	HighPrice        int    `json:"highPrice"`
-	LowPrice         int    `json:"lowPrice"`
-	OrderCount       int    `json:"orderCount"`
-	OrderCountString string `json:"orderCount_str"`
-	Volume           int    `json:"volume"`
-	VolumeString     string `json:"volume_str"`
+	AveragePrice int    `json:"avgPrice"`
+	Date         string `json:"date"`
+	HighPrice    int    `json:"highPrice"`
+	LowPrice     int    `json:"lowPrice"`
+	OrderCount   int    `json:"orderCount"`
+	Volume       int    `json:"volume"`
+	//OrderCountString string `json:"orderCount_str"`
+	//VolumeString     string `json:"volume_str"`
 }
 
 func (s *SDEType) GetTotalISKSpent() int {
@@ -43,12 +43,10 @@ func (s *SDEType) GetTotalISKSpent() int {
 			continue
 			//os.Exit(1)
 		}
-		fmt.Println(r.Status)
 		a, err2 := ioutil.ReadAll(r.Body)
 		if err2 != nil || a == nil {
 			fmt.Println("Error reading from r.Body")
 			continue
-			//os.Exit(1)
 		}
 		var Data MarketData
 		err3 := json.Unmarshal(a, &Data)
@@ -57,9 +55,8 @@ func (s *SDEType) GetTotalISKSpent() int {
 			fmt.Println("Dumping errorounes JSON")
 			ioutil.WriteFile("MarketJSONError.json", a, 0777)
 			continue
-			//os.Exit(1)
 		}
-		fmt.Println(len(Data.Items))
+		fmt.Println(Data)
 		for _, v := range Data.Items {
 			fmt.Println(v.Date, "has", v.Volume, "items")
 			TotalVolume += v.Volume

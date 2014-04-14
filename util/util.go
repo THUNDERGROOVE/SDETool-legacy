@@ -33,6 +33,19 @@ const (
 	sqlliteDriver = `SDETool uses an SQLite3 driver to deal with the SDE database from https://github.com/mattn/go-sqlite3, see http://mattn.mit-license.org/2012 for licensing`
 )
 
+// This should initialize all parts of SDETool, mainly the logging and DB stuffs helpful for making external tools
+func SDEToolInit() {
+	SetCWD()
+	LogInit()
+	CheckFile()
+	DBInitialize()
+}
+func SDEToolInitLocal() {
+	LogInit()
+	CheckFile()
+	DBInitialize()
+}
+
 // xspaces returns a string of spaces with a length of x
 func xspaces(x int) string {
 	var t string
@@ -157,8 +170,14 @@ func ForcePanic() {
 	panic("Forced runtime panic")
 }
 func SetCWD() {
-	os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
-	os.Chdir(os.Getenv("HOME") + "/.SDETool/")
+	err := os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
+	err1 := os.Chdir(os.Getenv("HOME") + "/.SDETool/")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	if err1 != nil {
+		fmt.Println(err.Error())
+	}
 }
 func Uninstall() {
 	var fname string
@@ -167,6 +186,11 @@ func Uninstall() {
 		fname = "SDETool.exe"
 	default:
 		fname = "SDETool"
+	}
+	err1 := os.Remove(fname)
+	if err1 != nil {
+		LErr(err1.Error())
+		return
 	}
 	s, _ := exec.LookPath("SDETool")
 	if s == "" {

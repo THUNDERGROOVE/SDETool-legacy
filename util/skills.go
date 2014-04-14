@@ -63,7 +63,7 @@ func parseFloat(s string, t *SDEType) float64 {
 	return v
 }
 
-func (t *SDEType) applyAttributeToType(attribute string, value float64, method string, level int) {
+func (t *SDEType) applyAttributeToType(attribute string, value float64, method string, level int, stack int) {
 	defer TimeFunction(time.Now(), t.GetName()+".applyAttributeToType("+attribute+", "+strconv.FormatFloat(value, 'f', 6, 64)+", "+method+", "+strconv.Itoa(level)+") "+method)
 	Info("Applying attribute " + attribute)
 	for k, _ := range t.Attributes {
@@ -79,19 +79,8 @@ func (t *SDEType) applyAttributeToType(attribute string, value float64, method s
 				value -= float64(ov)
 			case "MULTIPLY":
 				// This is all wrong, I know.
-				v := float64(0)
-				if value > 1 {
-					v = (100 * value) - 100
-				} else {
-					v = 100 - (100 * value)
-				}
-				y := (v * float64(level)) / 100
-				if value > 1 {
-					value = ov + (y * ov)
-				} else {
-					value = ov - (y * ov)
-				}
-				Info("Method: " + method + " Original value: " + strconv.FormatFloat(ov, 'f', 4, 64) + " v: " + strconv.FormatFloat(v, 'f', 4, 64) + " y: (v * float64(level)) / 100): " + strconv.FormatFloat(y, 'f', 4, 64) + " Output value: " + strconv.FormatFloat(value, 'f', 4, 64))
+				value = (StackingMultiplier(stack) * float64(valToPercent(int(value))))
+				Info("Method: " + method + " Original value: " + strconv.FormatFloat(ov, 'f', 4, 64) + " Output value: " + strconv.FormatFloat(value, 'f', 4, 64))
 			default:
 				LErr("Unknown attribute method" + method)
 			}
@@ -142,7 +131,7 @@ func (t *SDEType) skillApply(skillTID int, level int) {
 				LErr("found broken modifer")
 				continue
 			}
-			t.applyAttributeToType(attrib, value, method, level)
+			t.applyAttributeToType(attrib, value, method, level, 0)
 		}
 	}
 }

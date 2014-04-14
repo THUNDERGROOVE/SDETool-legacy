@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 )
 
 var (
@@ -25,7 +26,8 @@ func DBInitialize() {
 	var err error
 	db, err = sql.Open("sqlite3", SDEFile)
 	if err != nil {
-		// Don't panic or exit, could just mean the SDE wasn't downloaded
 		fmt.Println("Error opening the SDE", err.Error())
+		LErr("failed to open SDE DB")
+		os.Exit(1)
 	}
 }

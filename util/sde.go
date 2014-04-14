@@ -7,6 +7,7 @@ import (
 	"github.com/joshlf13/term"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -26,6 +27,7 @@ type SDEType struct {
 	BaseAttributes map[string]string
 	Skills         map[string]string
 	Modules        []SDEType
+	Modifiers      []string
 	Attribs        TypeAttributes
 	Tags           []int
 	HighModules    int
@@ -66,56 +68,9 @@ type TypeAttributes struct {
 	ShotPerRound           int
 }
 
-// GetRawDamage returns raw damages with prof and damage mods taken into account
-// Doesn't work on swarms or anything that gets damage from it's projectile __yet__
-func (t *SDEType) GetRawDamage(ProfLvl, ComplexModCount, EnhancedModCount, BasicModCount int) float64 {
-	defer TimeFunction(time.Now(), fmt.Sprint("GetRawDamage(", ProfLvl, ComplexModCount, EnhancedModCount, BasicModCount, ")"))
-	// Slice of ints, used to pass all the damage modifier values to GenericCalculateValue
-	m := []int{}
-	for i := 0; i < ComplexModCount; i++ {
-		m = append(m, 10)
-	}
-	for i := 0; i < EnhancedModCount; i++ {
-		m = append(m, 5)
-	}
-	for i := 0; i < BasicModCount; i++ {
-		m = append(m, 3)
-	}
-	v, err := t.GenericCalculateValue("mFireMode0.instantHitDamage", true, []int{ProfLvl * 3}, m)
-	if err != nil {
-		fmt.Println(err.Error())
-		return float64(-1) // Obvious error, don't see the need to have this method return an error at this time
-	}
-	return v
-}
-
-// GenericCalculateValue returns a float64 of a generic value calculated from various variables
-// You can pass a slice of int slices of values to calculate, each slice
-// within that slices' values will do stacking penalties
-// HighOrLow should be set, true = high, false = low
-// Requires that you give it at least a string that gets a value from t.Attributes
-// which must be convertable to an int, will throw an error if unable to.
-func (t *SDEType) GenericCalculateValue(ValueAttribute string, HighOrLow bool, Modifiers ...[]int) (float64, error) {
-	defer TimeFunction(time.Now(), fmt.Sprint("GenericCalculateValue(", ValueAttribute, HighOrLow, Modifiers, ")"))
-	BaseValue, err := strconv.ParseFloat(t.Attributes[ValueAttribute], 64)
-	if err != nil {
-		return BaseValue, err
-	}
-	Modifier := float64(0)
-
-	for _, v := range Modifiers {
-		Modifier = float64(0)
-		for k, c := range v {
-			// Apply our value
-			if HighOrLow {
-				Modifier += StackingMultiplier(k) * float64(c)
-			} else {
-				Modifier -= StackingMultiplier(k) * float64(c)
-			}
-		}
-		BaseValue = BaseValue + (float64(BaseValue) * float64((Modifier / 100)))
-	}
-	return BaseValue, nil
+type StringTup struct {
+	One string
+	Two string
 }
 
 // HasTag returns true if an SDEType contains a tag by TypeID
@@ -274,12 +229,27 @@ func (t *SDEType) PrintInfo() {
 	if VerboseInfo == true {
 		if len(t.Attributes) > 0 {
 			fmt.Println("===== Attributes =====")
-			for k, v := range t.Attributes {
+			at := make([]string, len(t.Attributes))
+			i := 0
+			for k, _ := range t.Attributes {
+				at[i] = k
+				i++
+			}
+			sort.Strings(at)
+			var tup []StringTup
+			for _, v := range at { // Create tuple like object from our sorted string string slice 'at'
+				for k, p := range t.Attributes {
+					if k == v {
+						tup = append(tup, StringTup{k, p})
+					}
+				}
+			}
+			for _, v := range tup {
 				// Don't print descriptions
-				if k == "mDescription" || k == "mShortDescription" {
+				if v.One == "mDescription" || v.One == "mShortDescription" {
 					continue
 				}
-				fmt.Println(k + xspaces(longestLen(t.Attributes)-len(k)) + " | " + v)
+				fmt.Println(v.One + xspaces(longestLen(t.Attributes)-len(v.One)) + " | " + v.Two)
 			}
 		} else {
 			fmt.Println("No attributes to show")

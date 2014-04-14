@@ -21,6 +21,8 @@ var (
 )
 
 func main() {
+	util.SetCWD()
+	util.LogInit()
 	defer util.TimeFunction(time.Now(), "main()")
 	defer func() {
 		if r := recover(); r != nil {
@@ -35,8 +37,6 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-	util.SetCWD()
-	util.LogInit()
 	args.Init()
 	config.LoadConfig()
 
@@ -56,7 +56,6 @@ func main() {
 		flag.PrintDefaults()
 	case *args.LicenseFlag:
 		util.PrintLicense()
-		fallthrough
 	case *args.VersionFlag:
 		fmt.Println("SDETool version", Version)
 		if BuildDate != "" {
@@ -64,7 +63,6 @@ func main() {
 		} else {
 			fmt.Println("No build date specified in binary")
 		}
-		fallthrough
 	case *args.RunServer:
 		*args.Debug = true
 		server.RunServer()

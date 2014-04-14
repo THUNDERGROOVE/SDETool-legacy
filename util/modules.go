@@ -14,7 +14,7 @@ import (
 // Applied modifiers from a type to a suit
 func (t *SDEType) ApplyModuleToSuit(m SDEType) {
 	defer TimeFunction(time.Now(), t.GetName()+".ApplyModuleToSuit("+m.GetName()+")")
-	if t.HasTag(category.Tag_dropsuit) == false {
+	if t.HasTag(category.Tag_dropsuit) == false && t.HasTag(category.Tag_weapon) == false { // Allow to work with weapons
 		LErr("attempted to call ApplyModuleToSuit() to non dropsuit type")
 		return
 	}
@@ -44,7 +44,13 @@ func (t *SDEType) moduleApply(b SDEType) {
 				LErr("found broken modifer")
 				continue
 			}
-			t.applyAttributeToType(attrib, value, method, 1)
+			ModStackCount := 0
+			for _, v := range t.Modifiers {
+				if attrib == v {
+					ModStackCount++
+				}
+			}
+			t.applyAttributeToType(attrib, value, method, 1, ModStackCount)
 		}
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/joshlf13/term"
 	"log"
 	"os"
+	"reflect"
 )
 
 var (
@@ -27,7 +28,20 @@ func LogInit() {
 	}
 }
 
-func LErr(s string) {
+func LErr(i ...interface{}) {
+	s := ""
+	for _, v := range i {
+		switch k := v.(type) {
+		case int:
+			s += fmt.Sprintf("%v ", k)
+		case string:
+			s += fmt.Sprintf("%v ", k)
+		case float64:
+			s += fmt.Sprintf("%v ", k)
+		default:
+			LErr("util.LErr() Does not support type " + reflect.TypeOf(v).String())
+		}
+	}
 	if DebugLog {
 		if Color {
 			term.Red(os.Stderr, "Error: "+s)
@@ -40,7 +54,20 @@ func LErr(s string) {
 	Log.Println("Error: ", s)
 	Log.SetPrefix("")
 }
-func Info(s string) {
+func Info(i ...interface{}) {
+	s := ""
+	for _, v := range i {
+		switch k := v.(type) {
+		case int:
+			s += fmt.Sprintf("%v ", k)
+		case string:
+			s += fmt.Sprintf("%v ", k)
+		case float64:
+			s += fmt.Sprintf("%v ", k)
+		default:
+			LErr("util.LErr() Does not support type " + reflect.TypeOf(v).String())
+		}
+	}
 	if DebugLog {
 		if Color {
 			term.Cyan(os.Stderr, "Info: "+s)

@@ -16,13 +16,12 @@ type Config struct {
 	VersionFlag   bool // Print current version
 	SlowFlag      bool // Don't use optimizations
 	TimeExecution bool // Should we time our functions?
-	RunServer     bool // Runs a server for hosting the web version of SDETool
 	Debug         bool
 }
 
 func fcheck() {
 	if _, err := os.Stat("SDETool.config"); os.IsNotExist(err) {
-		c := Config{false, false, false, false, false, false, false}
+		c := Config{false, false, false, false, false, false}
 		j, err2 := json.Marshal(c)
 		if err2 != nil {
 			panic(err2)
@@ -55,9 +54,6 @@ func LoadConfig() {
 	}
 	if *args.TimeExecution == false {
 		*args.TimeExecution = Conf.TimeExecution
-	}
-	if *args.RunServer == false {
-		*args.RunServer = Conf.RunServer
 	}
 	if *args.Debug == false {
 		*args.Debug = Conf.Debug
