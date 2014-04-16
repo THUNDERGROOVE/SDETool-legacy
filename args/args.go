@@ -28,6 +28,7 @@ var (
 	ForcePanic       *bool
 	Quiet            *bool
 	Uninstall        *bool
+	NoColor          *bool
 	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
 	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
 	BasicModCount    *int // BasicModCount is used to calculate how many Basic mods to use
@@ -53,6 +54,7 @@ func Init() {
 	ForcePanic = flag.Bool("fp", false, "Forces a panic, debug uses")
 	Quiet = flag.Bool("quiet", false, "Used with flags like uninstall where you want it to produce no output, ask for input or block in any sort of way")
 	Uninstall = flag.Bool("uninstall", false, "Uninstalls SDETool if install via makefile or manually in your PATH variable")
+	NoColor = flag.Bool("nocolor", false, "Used to disable color.  Usefull for >'ing and |'ing")
 
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")

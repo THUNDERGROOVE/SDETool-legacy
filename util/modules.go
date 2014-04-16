@@ -50,6 +50,7 @@ func (t *SDEType) moduleApply(b SDEType) {
 					ModStackCount++
 				}
 			}
+			ModStackCount++
 			t.applyAttributeToType(attrib, value, method, 1, ModStackCount)
 		}
 	}

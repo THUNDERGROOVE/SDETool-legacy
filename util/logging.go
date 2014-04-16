@@ -44,7 +44,7 @@ func LErr(i ...interface{}) {
 	}
 	if DebugLog {
 		if Color {
-			term.Red(os.Stderr, "Error: "+s)
+			term.Red(os.Stdout, "Error: "+s)
 		} else {
 			fmt.Print("Error: " + s)
 		}
@@ -65,12 +65,12 @@ func Info(i ...interface{}) {
 		case float64:
 			s += fmt.Sprintf("%v ", k)
 		default:
-			LErr("util.LErr() Does not support type " + reflect.TypeOf(v).String())
+			LErr("util.Info() Does not support type " + reflect.TypeOf(v).String())
 		}
 	}
 	if DebugLog {
 		if Color {
-			term.Cyan(os.Stderr, "Info: "+s)
+			term.Cyan(os.Stdout, "Info: "+s)
 
 		} else {
 			fmt.Print("Info: " + s)
@@ -84,7 +84,7 @@ func Info(i ...interface{}) {
 func Trace(s string) {
 	if DebugLog {
 		if Color {
-			term.Green(os.Stderr, "Trace: "+s)
+			term.Green(os.Stdout, "Trace: "+s)
 
 		} else {
 			fmt.Print("Trace: " + s)

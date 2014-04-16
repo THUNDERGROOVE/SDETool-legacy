@@ -219,3 +219,11 @@ func Uninstall() {
 		fmt.Println("DONE")
 	}
 }
+
+func Inverse(b bool) bool {
+	if b {
+		return false
+	} else {
+		return true
+	}
+}

@@ -45,10 +45,13 @@ func main() {
 	util.TimeFunc = *args.TimeExecution
 	util.DebugLog = *args.Debug
 	util.SDEVersion = *args.SDEVersion
+	util.Color = util.Inverse(*args.NoColor)
 
 	util.Info("Debug logging on")
 	util.CheckFile()
 	util.DBInitialize()
+	util.Info("Testing", "Testing", 123, float64(456.789), util.GetSDETypeID(351681))
+
 	// Change to select switch?
 	switch {
 	default:
