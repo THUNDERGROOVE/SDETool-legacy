@@ -8,7 +8,8 @@ import (
 	"strings"
 )
 
-// Returns the "closest" matching string to subs from strings as a TypeID
+// Returns the "closest" matching string to subs from strings as a TypeID using
+// a set of paramaters that make sense for it's applications (-s flag)
 func FuzzySearch(Strings map[int]string, subs string) int {
 	bm := 0
 	bmMatchType := 0 // 0 none, 1 = strings.Contains() match, 2 non case sensitive exact match, 3 case sensitive exact match

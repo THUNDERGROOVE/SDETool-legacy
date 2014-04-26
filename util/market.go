@@ -14,9 +14,12 @@ import (
 	"time"
 )
 
+// MarketData is a set to group a slice of MarketDataEntry
 type MarketData struct {
 	Items []MarketDataEntry `json:"items"`
 }
+
+// MarketDataEntry is a struct for Unmarhaling Market data
 type MarketDataEntry struct {
 	AveragePrice int    `json:"avgPrice"`
 	Date         string `json:"date"`
@@ -28,6 +31,8 @@ type MarketDataEntry struct {
 	//VolumeString     string `json:"volume_str"`
 }
 
+// GetTotalISKSpent is a function to get the total amount of ISK spent on a certain type.
+// It's currently broken until I look at market data again
 func (s *SDEType) GetTotalISKSpent() int {
 	defer TimeFunction(time.Now(), "(s *SDEType) GetTotalISKSpent()")
 	fmt.Println("GetTotalISKSpent() called\n\n\n")

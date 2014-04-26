@@ -33,13 +33,17 @@ const (
 	sqlliteDriver = `SDETool uses an SQLite3 driver to deal with the SDE database from https://github.com/mattn/go-sqlite3, see http://mattn.mit-license.org/2012 for licensing`
 )
 
-// This should initialize all parts of SDETool, mainly the logging and DB stuffs helpful for making external tools
+// SDEToolInit should initialize all parts of SDETool, mainly the logging and DB stuffs helpful for making external tools
 func SDEToolInit() {
 	SetCWD()
 	LogInit()
 	CheckFile()
 	DBInitialize()
 }
+
+// SDEToolInitLocal is like SDEToolInit except it doesn't setup an application
+// directory and uses the current working directory for configs and database
+// files
 func SDEToolInitLocal() {
 	LogInit()
 	CheckFile()
@@ -162,13 +166,20 @@ func DumpTypes() {
 	ioutil.WriteFile("typeDump.txt", []byte(f), 0777)
 }
 
+// PrintHeader prints a simple header about SDETool
 func PrintHeader() {
 	fmt.Println("SDETool written by Nick Powell")
 	fmt.Println("The multiplatform CLI tool for accessing data from the Dust514 SDE")
 }
+
+// ForcePanic is a function to call panic() used for debuging our panic
+// recovery and logging
 func ForcePanic() {
 	panic("Forced runtime panic")
 }
+
+// SetCWD sets our current working directory to our application directory.
+// will make the folder if it doesn't already exist
 func SetCWD() {
 	err := os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
 	err1 := os.Chdir(os.Getenv("HOME") + "/.SDETool/")
@@ -179,6 +190,9 @@ func SetCWD() {
 		fmt.Println(err.Error())
 	}
 }
+
+// Uninstall deletes SDETool from our path if installed using methods that
+// will be available in the future if anyone finds this useful :P
 func Uninstall() {
 	var fname string
 	switch runtime.GOOS {
@@ -220,6 +234,9 @@ func Uninstall() {
 	}
 }
 
+// Inverse makes any bool the opposite
+// True  | False
+// False | True
 func Inverse(b bool) bool {
 	if b {
 		return false

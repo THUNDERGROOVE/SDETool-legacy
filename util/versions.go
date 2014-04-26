@@ -28,7 +28,7 @@ func init() {
 	SDEUrl = SDE1_8        // URL to download the SDE
 }
 
-// Used to make sure we have our SDEFile and if not we get it ourselves.
+// CheckFile is used to make sure we have our SDEFile and if not we get it ourselves.
 func CheckFile() {
 	switch SDEVersion {
 	case "1.7":

@@ -11,7 +11,8 @@ import (
 	The modules file houses methods for applying modules to dropsuits which takes into account skills
 */
 
-// Applied modifiers from a type to a suit
+// ApplyModuleToSuit applied a module by typeID to a suit.  This can be used
+// for other uses as type application works very simiarly for most things.
 func (t *SDEType) ApplyModuleToSuit(m SDEType) {
 	defer TimeFunction(time.Now(), t.GetName()+".ApplyModuleToSuit("+m.GetName()+")")
 	if t.HasTag(category.Tag_dropsuit) == false && t.HasTag(category.Tag_weapon) == false { // Allow to work with weapons
@@ -31,6 +32,7 @@ func (t *SDEType) ApplyModuleToSuit(m SDEType) {
 
 }
 
+// moduleApply is a helper function.  It expects skills be applied beforehand
 func (t *SDEType) moduleApply(b SDEType) {
 	defer TimeFunction(time.Now(), t.GetName()+".moduleApply("+b.GetName()+")")
 	// Apply all modifier.X
@@ -56,6 +58,9 @@ func (t *SDEType) moduleApply(b SDEType) {
 	}
 }
 
+// modulesAreValid checks if an SDEType with modules applied would be valid.
+// For example a militia Gallente medium frame can't use a basic shield
+// extender as it has no high slots
 func (t *SDEType) ModulesAreValid() bool {
 	defer TimeFunction(time.Now(), t.GetName()+".moduleApply()")
 	IL := 0

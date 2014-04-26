@@ -128,6 +128,8 @@ func (t *SDEType) Category() int {
 	return c
 }
 
+// PrintDamageChart prints the damages of an item with various combinations
+// of proficiency and damage modifiers.
 func (t *SDEType) PrintDamageChart() {
 	defer TimeFunction(time.Now(), "PrintDamageChart()")
 	if t.HasTag(category.Tag_weapon) == false {

@@ -3,11 +3,13 @@ package util
 /*
 	market.regions.go is just a hardcoded anonymous struct to keep track of all of the regions
 */
-
+// Location is a tuple like struct of the reigon name and it's typeID
 type Location struct {
 	Name   string
 	TypeID int
 }
+
+// Locations is just a slice of all the locations
 type Locations struct {
 	Regions []Location
 }

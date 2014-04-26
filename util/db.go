@@ -15,6 +15,7 @@ var (
 	db *sql.DB
 )
 
+// CatmaAttribueLookup is a dataset used to group a row from CatmaAttributes
 type CatmaAttributeLookup struct {
 	nTypeID            int
 	catmaAttributeName string
