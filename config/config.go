@@ -13,16 +13,18 @@ import (
 
 var Conf Config
 
-// Used to set default boolean flags
+// Config is the data set used the Marshal/Unmarshal our config
 type Config struct {
 	VerboseInfo   bool // If our info should print as much data about a type that we can
 	LicenseFlag   bool // Print Licensing information
 	VersionFlag   bool // Print current version
 	SlowFlag      bool // Don't use optimizations
 	TimeExecution bool // Should we time our functions?
-	Debug         bool
+	Debug         bool // Debug man
 }
 
+// fcheck is just a small function to check if our config exists and if not it
+// make a clean config file
 func fcheck() {
 	if _, err := os.Stat("SDETool.config"); os.IsNotExist(err) {
 		c := Config{false, false, false, false, false, false}
@@ -34,6 +36,7 @@ func fcheck() {
 	}
 }
 
+// LoadConfig loads our config from file
 func LoadConfig() {
 	fcheck()
 	f, err1 := ioutil.ReadFile("SDETool.config")
@@ -63,5 +66,8 @@ func LoadConfig() {
 		*args.Debug = Conf.Debug
 	}
 }
+
+// SaveConfig saves config to disk.  Currently it does nothign as SDETool
+// doesn't have in program config editing.
 func SaveConfig() {
 }

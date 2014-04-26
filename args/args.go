@@ -1,5 +1,5 @@
 /*
-	args.go is a package used to keep all command line parsing out util so our
+	args is a package used to keep all command line parsing out util so our
 	code can be reused
 */
 package args
