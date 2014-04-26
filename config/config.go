@@ -1,3 +1,7 @@
+/*
+	The config package is a simple config loaded for SDETool.  It loads a file
+	SDETool.config from either %HOME% or $HOME depending on the platform.
+*/
 package config
 
 import (
