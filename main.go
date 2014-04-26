@@ -56,8 +56,10 @@ func main() {
 	// Change to select switch?
 	switch {
 	default:
-		util.PrintHeader()
-		flag.PrintDefaults()
+		if *args.SearchFlag != "" && *args.InfoFlag != "" && *args.Damage != "" {
+			util.PrintHeader()
+			flag.PrintDefaults()
+		}
 	case *args.LicenseFlag:
 		util.PrintLicense()
 	case *args.VersionFlag:

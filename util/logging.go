@@ -16,7 +16,7 @@ var (
 
 // TypeString was initially made for our logging functions however it's can be
 // used all over the codebase
-func TypeString(i ...interface{}) string {
+func TypeString(i []interface{}) string {
 	s := ""
 	for _, v := range i {
 		switch k := v.(type) {
@@ -27,9 +27,9 @@ func TypeString(i ...interface{}) string {
 		case float64:
 			s += fmt.Sprintf("%v ", k)
 		case SDEType:
-			s += fmt.Sprintf("%v ", k.TypeName)
+			s += fmt.Sprintf("%v ", k.GetName())
 		default:
-			LErr("util.TypeString() Does not support type " + reflect.TypeOf(v).String())
+			s += fmt.Sprint("util.TypeString() Does not support type " + reflect.TypeOf(k).String())
 		}
 	}
 	return s

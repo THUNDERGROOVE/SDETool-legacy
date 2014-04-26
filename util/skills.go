@@ -79,7 +79,7 @@ func (t *SDEType) applyAttributeToType(attribute string, value float64, method s
 				value -= float64(ov)
 			case "MULTIPLY":
 				// This is all wrong, I know.
-				fmt.Println("(", t.Attributes[k], "* (", StackingMultiplier(stack), "* %", float64(valToPercent(value)), ")")
+				Info("(", t.Attributes[k], "* (", StackingMultiplier(stack), "* %", float64(valToPercent(value)), ")")
 				value = ov + (StackingMultiplier(stack) * float64(valToPercent(value)) / 100)
 				Info("Method: " + method + " Original value: " + strconv.FormatFloat(ov, 'f', 4, 64) + " Output value: " + strconv.FormatFloat(value, 'f', 4, 64))
 			default:

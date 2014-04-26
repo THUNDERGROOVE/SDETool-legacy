@@ -1,0 +1,3 @@
+- Finish rewrite of all the maths to make them more correct.
+	- This includes making it use SDEType.ApplyModuleToSuit()
+	- Make sure math is correct, we will use ProtoFits.com and dustthang.dk as our reference

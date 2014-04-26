@@ -181,13 +181,10 @@ func ForcePanic() {
 // SetCWD sets our current working directory to our application directory.
 // will make the folder if it doesn't already exist
 func SetCWD() {
-	err := os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
+	os.Mkdir(os.Getenv("HOME")+"/.SDETool/", 0777)
 	err1 := os.Chdir(os.Getenv("HOME") + "/.SDETool/")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
 	if err1 != nil {
-		fmt.Println(err.Error())
+		fmt.Println(err1.Error())
 	}
 }
 

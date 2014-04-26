@@ -1,6 +1,6 @@
 SDETool
 =======
-
+![SDETool](https://raw.github.com/THUNDERGROOVE/SDETool/master/img/out.png)
 Uses the Dust514 __S__tatic __D__ata __E__xport to poll for info.
 
 Highly unoptimized for now however it should be fairly stable(hopefully).
