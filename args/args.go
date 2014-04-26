@@ -1,7 +1,6 @@
 /*
 	args.go is used so all packages can access our arguments
 */
-
 package args
 
 import (
