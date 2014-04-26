@@ -40,7 +40,8 @@ func main() {
 	args.Init()
 	config.LoadConfig()
 
-	// This set is to prevent some nasty nil pointer things if other programs import our packages.  Must be called as soon as possible to prevent errors
+	// This set is to prevent some nasty nil pointer things if other programs
+	// import our packages.  Must be called as soon as possible to prevent errors
 	util.VerboseInfo = *args.VerboseInfo
 	util.TimeFunc = *args.TimeExecution
 	util.DebugLog = *args.Debug

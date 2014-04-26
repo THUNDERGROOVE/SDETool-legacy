@@ -1,7 +1,6 @@
 package util
 
 import (
-	//"io/ioutil"
 	"fmt"
 	"github.com/joshlf13/term"
 	"log"
@@ -15,6 +14,30 @@ var (
 	Color    bool
 )
 
+// TypeString was initially made for our logging functions however it's can be
+// used all over the codebase
+func TypeString(i ...interface{}) string {
+	s := ""
+	for _, v := range i {
+		switch k := v.(type) {
+		case int:
+			s += fmt.Sprintf("%v ", k)
+		case string:
+			s += fmt.Sprintf("%v ", k)
+		case float64:
+			s += fmt.Sprintf("%v ", k)
+		case SDEType:
+			s += fmt.Sprintf("%v ", k.TypeName)
+		default:
+			LErr("util.TypeString() Does not support type " + reflect.TypeOf(v).String())
+		}
+	}
+	return s
+}
+
+// LogInit is called to init the logging portion of the util package.  If you
+// try using any of the logging functions before calling this you will get a
+// nil pointer exception.
 func LogInit() {
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -23,73 +46,60 @@ func LogInit() {
 	Color = true
 	Log = log.New(f, "", log.Ltime)
 	Info("Log started!")
-	if DebugLog {
-		//log.SetOutput(os.Stderr)
-	}
 }
 
+// LErr is a function for non-fatal errors.  It will always log to file and
+// optionally with -debug print to stdout and also will have nice colored
+// output as long as -nocolor is not supplied.
 func LErr(i ...interface{}) {
-	s := ""
-	for _, v := range i {
-		switch k := v.(type) {
-		case int:
-			s += fmt.Sprintf("%v ", k)
-		case string:
-			s += fmt.Sprintf("%v ", k)
-		case float64:
-			s += fmt.Sprintf("%v ", k)
-		default:
-			LErr("util.LErr() Does not support type " + reflect.TypeOf(v).String())
-		}
-	}
+	s := TypeString(i)
 	if DebugLog {
 		if Color {
-			term.Red(os.Stdout, "Error: "+s)
+			term.Red(os.Stdout, "Error: "+s+"\n")
 		} else {
 			fmt.Print("Error: " + s)
 		}
-		fmt.Println()
 	}
 	Log.SetPrefix("WARN ")
 	Log.Println("Error: ", s)
 	Log.SetPrefix("")
 }
+
+// Info is a function for informing the user what is going on.  It will
+// always log to file and optionally with -debug print to stdout and
+// also will have nice coloredoutput as long as -nocolor is not supplied.
 func Info(i ...interface{}) {
-	s := ""
-	for _, v := range i {
-		switch k := v.(type) {
-		case int:
-			s += fmt.Sprintf("%v ", k)
-		case string:
-			s += fmt.Sprintf("%v ", k)
-		case float64:
-			s += fmt.Sprintf("%v ", k)
-		default:
-			LErr("util.Info() Does not support type " + reflect.TypeOf(v).String())
-		}
-	}
+	s := TypeString(i)
 	if DebugLog {
 		if Color {
-			term.Cyan(os.Stdout, "Info: "+s)
+			term.Cyan(os.Stdout, "Info: "+s+"\n")
 
 		} else {
 			fmt.Print("Info: " + s)
 		}
-		fmt.Println()
 	}
 	Log.SetPrefix("INFO ")
 	Log.Println(s)
 	log.SetPrefix("")
 }
-func Trace(s string) {
+
+// Trace is a function for non-helper functions to call on call.  It will
+// always log to file and optionally with -debug print to stdout and
+// also will have nice coloredoutput as long as -nocolor is not supplied.
+// Don't:
+//   Use on primitive, short or otherwise uneeded functions.  An example
+//   of ones would be the logging functions
+// Do:
+//   Use on complicated functions, an example would be most of the sde.go
+//   file and any method that uses util.TimeFunction on a defer.
+func Trace(i ...interface{}) {
+	s := TypeString(i)
 	if DebugLog {
 		if Color {
-			term.Green(os.Stdout, "Trace: "+s)
-
+			term.Green(os.Stdout, "Trace: "+s+"\n")
 		} else {
 			fmt.Print("Trace: " + s)
 		}
-		fmt.Println()
 	}
 	Log.SetPrefix("TRACE ")
 	Log.Println(s)
