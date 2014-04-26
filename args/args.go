@@ -29,11 +29,12 @@ var (
 	Quiet            *bool
 	Uninstall        *bool
 	NoColor          *bool
-	ComplexModCount  *int // ComplexModCount is used to calculate how many Complex mods to use
-	EnhancedModCount *int // EnhancedModCount is used to calculate how many Enhanced mods to use
-	BasicModCount    *int // BasicModCount is used to calculate how many Basic mods to use
-	Prof             *int // Prof is how many levels of proficiency used when calculating damage
-	Port             *int // What port to listen on?
+	NoSkills         *bool // Calculate stats without skill bonuses
+	ComplexModCount  *int  // ComplexModCount is used to calculate how many Complex mods to use
+	EnhancedModCount *int  // EnhancedModCount is used to calculate how many Enhanced mods to use
+	BasicModCount    *int  // BasicModCount is used to calculate how many Basic mods to use
+	Prof             *int  // Prof is how many levels of proficiency used when calculating damage
+	Port             *int  // What port to listen on?
 )
 
 // Init handles parsing command line flags
@@ -56,7 +57,7 @@ func Init() {
 	Quiet = flag.Bool("quiet", false, "Used with flags like uninstall where you want it to produce no output, ask for input or block in any sort of way")
 	Uninstall = flag.Bool("uninstall", false, "Uninstalls SDETool if install via makefile or manually in your PATH variable")
 	NoColor = flag.Bool("nocolor", false, "Used to disable color.  Usefull for >'ing and |'ing")
-
+	NoSkills = flag.Bool("ns", false, "Used to prevent SDETool from applying skill bonuses")
 	// Damage and mod counts
 	Damage = flag.String("d", "", "Get damage calculations, takes a TypeID")
 	SDEVersion = flag.String("sv", "1.8", "Version of the SDE to use, in the form of '1.7' or '1.8'")

@@ -87,7 +87,11 @@ func main() {
 	} else if *args.InfoFlag != "" {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
-		t.ApplySkillsToType()
+		if *args.NoSkills == false {
+			t.ApplySkillsToType()
+		} else {
+			t.ApplyAttributesToType()
+		}
 		if *args.ApplyModule != "" { // Apply the module to a suit if we can
 			g := util.ResolveInput(*args.ApplyModule)
 			m := util.GetSDETypeID(g)

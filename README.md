@@ -1,6 +1,6 @@
 SDETool
 =======
-![SDETool](https://raw.githubusercontent.com/THUNDERGROOVE/SDETool/master/img/out.gif)
+![SDETool](img/out.gif)
 
 SDETool uses the Dust514 Static Data Export to poll for info.
 
