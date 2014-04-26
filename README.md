@@ -1,7 +1,8 @@
 SDETool
 =======
 ![SDETool](https://raw.githubusercontent.com/THUNDERGROOVE/SDETool/master/img/out.gif)
-Uses the Dust514 Static Data Export to poll for info.
+
+SDETool uses the Dust514 Static Data Export to poll for info.
 
 Highly unoptimized for now however it should be fairly stable(hopefully).
 
