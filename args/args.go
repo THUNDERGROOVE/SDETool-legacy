@@ -36,6 +36,7 @@ var (
 	Port             *int // What port to listen on?
 )
 
+// Init handles parsing command line flags
 func Init() {
 	// Flags
 	SearchFlag = flag.String("s", "", "Search for TypeIDs")
