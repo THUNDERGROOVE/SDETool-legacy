@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/args"
 	"github.com/THUNDERGROOVE/SDETool/config"
@@ -12,12 +11,9 @@ import (
 	"time"
 )
 
-const (
-	Version = 0.3
-)
-
 var (
-	BuildDate string
+	BUILD_DATE string
+	VERSION    string
 )
 
 func main() {
@@ -56,16 +52,20 @@ func main() {
 	// Change to select switch?
 	switch {
 	default:
-		if *args.SearchFlag != "" && *args.InfoFlag != "" && *args.Damage != "" {
+		if *args.SearchFlag == "" && *args.InfoFlag == "" && *args.Damage == "" {
 			util.PrintHeader()
-			flag.PrintDefaults()
+			args.PrintHelp()
 		}
 	case *args.LicenseFlag:
 		util.PrintLicense()
 	case *args.VersionFlag:
-		fmt.Println("SDETool version", Version)
-		if BuildDate != "" {
-			fmt.Println("Built on: ", BuildDate)
+		if VERSION != "" {
+			fmt.Println("SDETool version: ", VERSION)
+		} else { // Assume was built with `make` or `go build`
+			fmt.Println("SDETool version: Dev build")
+		}
+		if BUILD_DATE != "" {
+			fmt.Println("Built on: ", BUILD_DATE)
 		} else {
 			fmt.Println("No build date specified in binary")
 		}

@@ -6,6 +6,7 @@ package args
 
 import (
 	"flag"
+	"fmt"
 )
 
 var (
@@ -70,4 +71,31 @@ func Init() {
 	RunServer = flag.Bool("server", false, "Runs a server for hosting the web version of SDETool")
 	Port = flag.Int("port", 80, "Port used for -server")
 	flag.Parse()
+}
+
+// I don't quite like how flag.PrintDefaults() prints out the flags so I
+// decided to make this
+func PrintHelp() {
+	help := `
+	Search: -s
+	  Supply with the name of the item to search for.  Returns the typeID and
+	  full name of each
+	Info: -i
+	  Supply with either a typeID, typeName or displayName of the type you want
+	  to print info for.
+	  Sub Flags:
+	    Market: -m
+	      Prints basic market data for the type you're searching (Currently 
+	      broken)
+	    Damage: -d
+	      By itself it will print a damage chart, you can supply the
+	      (-c)omplex, (-e)nhanced, (-b)asic damage mod count and the
+	      (-p)roficiency level.
+	Debug: -d
+	  Prints debug information, very helpful for bug reporting
+	Time execution: -time
+	  Prints execution time of critical functions, helpful for optimizing
+	Version: -v
+	`
+	fmt.Println(help)
 }

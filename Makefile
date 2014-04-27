@@ -21,3 +21,7 @@ install: linux
 	@echo Installing SDETool to /usr/local/bin
 	@echo this will only work on Linux
 	sudo cp -f SDETool /usr/local/bin/
+release:
+	@echo Creating release using goxc
+	@echo This will only work on x64 Windows for now
+	goxc -bc "windows" -arch "amd64"
