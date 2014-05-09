@@ -21,12 +21,12 @@ type MarketData struct {
 
 // MarketDataEntry is a struct for Unmarhaling Market data
 type MarketDataEntry struct {
-	AveragePrice int    `json:"avgPrice"`
-	Date         string `json:"date"`
-	HighPrice    int    `json:"highPrice"`
-	LowPrice     int    `json:"lowPrice"`
-	OrderCount   int    `json:"orderCount"`
-	Volume       int    `json:"volume"`
+	AveragePrice float64 `json:"avgPrice"`
+	Date         string  `json:"date"`
+	HighPrice    float64 `json:"highPrice"`
+	LowPrice     float64 `json:"lowPrice"`
+	OrderCount   float64 `json:"orderCount"`
+	Volume       float64 `json:"volume"`
 	//OrderCountString string `json:"orderCount_str"`
 	//VolumeString     string `json:"volume_str"`
 }
@@ -35,38 +35,39 @@ type MarketDataEntry struct {
 // It's currently broken until I look at market data again
 func (s *SDEType) GetTotalISKSpent() int {
 	defer TimeFunction(time.Now(), "(s *SDEType) GetTotalISKSpent()")
-	fmt.Println("GetTotalISKSpent() called\n\n\n")
+	Info("GetTotalISKSpent() called\n\n\n")
 	t := s.TypeID
-	TotalVolume := 0
-	fmt.Println(len(Regions.Regions), "regions")
+	TotalVolume := float64(0)
+	Info(len(Regions.Regions), "regions")
 	for _, l := range Regions.Regions {
 		v := l.TypeID
-		fmt.Println("Region, " + strconv.Itoa(v))
+		Info("Region, " + strconv.Itoa(v))
 		r, err := http.Get("http://public-crest.eveonline.com/market/" + strconv.Itoa(v) + "/types/" + strconv.Itoa(t) + "/history/")
 		if err != nil || r == nil {
-			fmt.Println("Error getting http://public-crest.eveonline.com/market/" + strconv.Itoa(v) + "/types/" + strconv.Itoa(t) + "/history/")
+			LErr("Error getting http://public-crest.eveonline.com/market/" + strconv.Itoa(v) + "/types/" + strconv.Itoa(t) + "/history/")
 			continue
 			//os.Exit(1)
 		}
 		a, err2 := ioutil.ReadAll(r.Body)
 		if err2 != nil || a == nil {
-			fmt.Println("Error reading from r.Body")
+			LErr("Error reading from r.Body")
 			continue
 		}
 		var Data MarketData
+		Info(string(a))
 		err3 := json.Unmarshal(a, &Data)
 		if err3 != nil {
-			fmt.Println("Error unmarshaling data,", err3.Error())
-			fmt.Println("Dumping errorounes JSON")
+			LErr("Error unmarshaling data,", err3.Error())
+			LErr("Dumping errorounes JSON")
 			ioutil.WriteFile("MarketJSONError.json", a, 0777)
 			continue
 		}
-		fmt.Println(Data)
+		Info(fmt.Sprintf("%v", Data))
 		for _, v := range Data.Items {
-			fmt.Println(v.Date, "has", v.Volume, "items")
+			Info(v.Date, "has", v.Volume, "items")
 			TotalVolume += v.Volume
 		}
 	}
 	p, _ := strconv.Atoi(s.GetPrice())
-	return TotalVolume * p
+	return int(TotalVolume * float64(p))
 }
