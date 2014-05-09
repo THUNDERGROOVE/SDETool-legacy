@@ -1,6 +1,5 @@
 SDETool
 =======
-![SDETool](img/out.gif)
 
 [![GoDoc](https://godoc.org/github.com/THUNDERGROOVE/SDETool?status.png)](https://godoc.org/github.com/THUNDERGROOVE/SDETool)
 
