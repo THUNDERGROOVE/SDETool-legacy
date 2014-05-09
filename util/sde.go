@@ -4,7 +4,6 @@ import (
 	//"database/sql"
 	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/category"
-	"github.com/joshlf13/term"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"sort"
@@ -151,7 +150,7 @@ func (t *SDEType) PrintDamageChart() {
 	print("\n")
 	for c := 0; c < 6; c++ {
 		for p := 0; p < 6; p++ {
-			d := t.GetRawDamage(p, c, 0, 0)
+			d := -1
 			fmt.Print(strconv.Itoa(c) + xspaces(ll-len(strconv.Itoa(c))) + "|")
 			fmt.Print(strconv.Itoa(p) + xspaces(ll-len(strconv.Itoa(p))) + "|")
 			fmt.Print(strconv.Itoa(int(d)) + xspaces(ll-len(strconv.Itoa(int(d)))) + "\n")
@@ -197,13 +196,13 @@ func (t *SDEType) PrintInfo() {
 		printFNotZero("-> Melee damage", t.Attribs.MeleeDamage)
 	}
 	if len(t.Modules) > 0 {
-		if Color && t.ModulesAreValid() == false {
-			term.Red(os.Stdout, "===== Applied Modules =====")
-			fmt.Println()
-			fmt.Println("\tNot enough slots to apply the selected modules, calculated anyways.")
-		} else {
-			fmt.Println("===== Applied Modules =====")
-		}
+		// if Color && t.ModulesAreValid() == false {
+		// 	term.Red(os.Stdout, "===== Applied Modules =====")
+		// 	fmt.Println()
+		// 	fmt.Println("\tNot enough slots to apply the selected modules, calculated anyways.")
+		// } else {
+		// 	fmt.Println("===== Applied Modules =====")
+		// }
 		for _, v := range t.Modules {
 			fmt.Println("->", v.GetName())
 		}

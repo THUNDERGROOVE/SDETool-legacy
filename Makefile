@@ -17,11 +17,11 @@ dep:
 	go install github.com/joshlf13/term
 	go get github.com/mattn/go-sqlite3
 	go install github.com/mattn/go-sqlite3
+	go get github.com/skratchdot/open-golang/open
+	go install github.com/skratchdot/open-golang/open
 install: linux
 	@echo Installing SDETool to /usr/local/bin
 	@echo this will only work on Linux
 	sudo cp -f SDETool /usr/local/bin/
 release:
-	@echo Creating release using goxc
-	@echo This will only work on x64 Windows for now
 	goxc -bc "windows" -arch "amd64"

@@ -6,6 +6,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/THUNDERGROOVE/SDETool/args"
 	"io/ioutil"
 	"os"
@@ -67,7 +68,21 @@ func LoadConfig() {
 	}
 }
 
-// SaveConfig saves config to disk.  Currently it does nothign as SDETool
-// doesn't have in program config editing.
+// SaveConfig saves config to disk.  Currently working but unused as nothing in
+// SDETool changes our config.
 func SaveConfig() {
+	if _, err := os.Stat("SDETool.config"); os.IsNotExist(err) {
+		return
+	}
+	if err := os.Remove("SDETool.config"); err != nil {
+		fmt.Println("Error removing old config while saving")
+		return
+	}
+	if v, err := json.Marshal(Conf); err != nil {
+		fmt.Println("Error Marshaling config")
+	} else {
+		if err := ioutil.WriteFile("SDETool.config", v, 0777); err != nil {
+			fmt.Println("Error saving new config")
+		}
+	}
 }

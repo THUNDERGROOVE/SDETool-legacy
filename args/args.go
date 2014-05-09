@@ -45,7 +45,7 @@ func Init() {
 	InfoFlag = flag.String("i", "", "Get info with a TypeID, typeName or mDisplayName")
 	VerboseInfo = flag.Bool("vi", false, "Prints all attributes when used with -i")
 	LicenseFlag = flag.Bool("l", false, "Prints license information.")
-	VersionFlag = flag.Bool("version", false, "Prints the SDETool version")
+	VersionFlag = flag.Bool("v", false, "Prints the SDETool version")
 	SlowFlag = flag.Bool("slow", false, "Forces the use of unoptimized functions")
 	TimeExecution = flag.Bool("time", false, "Times the execution of functions that may take a decent amount of time")
 	Clean = flag.Bool("clean", false, "Cleans all database and cache files")

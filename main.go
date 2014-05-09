@@ -87,15 +87,7 @@ func main() {
 	} else if *args.InfoFlag != "" {
 		i := util.ResolveInput(*args.InfoFlag)
 		t := util.GetSDETypeID(i)
-		if *args.NoSkills == false {
-			t.ApplySkillsToType()
-		} else {
-			t.ApplyAttributesToType()
-		}
 		if *args.ApplyModule != "" { // Apply the module to a suit if we can
-			g := util.ResolveInput(*args.ApplyModule)
-			m := util.GetSDETypeID(g)
-			t.ApplyModuleToSuit(m)
 		}
 		t.PrintInfo()
 		if *args.GetMarketData {
@@ -110,8 +102,7 @@ func main() {
 			t.PrintDamageChart()
 			return
 		}
-		d := t.GetRawDamage(*args.Prof, *args.ComplexModCount, *args.EnhancedModCount, *args.BasicModCount)
-		fmt.Println("->", t.GetName(), "would do ", d, "damage")
+		fmt.Println("->", t.GetName(), "would do ", -1, "damage")
 		if *args.Prof != 0 {
 			fmt.Println("->", "Proficiency level", *args.Prof)
 		}
