@@ -6,7 +6,6 @@ package util
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	//"os"
@@ -35,13 +34,11 @@ type MarketDataEntry struct {
 // It's currently broken until I look at market data again
 func (s *SDEType) GetTotalISKSpent() int {
 	defer TimeFunction(time.Now(), "(s *SDEType) GetTotalISKSpent()")
-	Info("GetTotalISKSpent() called\n\n\n")
 	t := s.TypeID
 	TotalVolume := float64(0)
 	Info(len(Regions.Regions), "regions")
 	for _, l := range Regions.Regions {
 		v := l.TypeID
-		Info("Region, " + strconv.Itoa(v))
 		r, err := http.Get("http://public-crest.eveonline.com/market/" + strconv.Itoa(v) + "/types/" + strconv.Itoa(t) + "/history/")
 		if err != nil || r == nil {
 			LErr("Error getting http://public-crest.eveonline.com/market/" + strconv.Itoa(v) + "/types/" + strconv.Itoa(t) + "/history/")
@@ -54,7 +51,6 @@ func (s *SDEType) GetTotalISKSpent() int {
 			continue
 		}
 		var Data MarketData
-		Info(string(a))
 		err3 := json.Unmarshal(a, &Data)
 		if err3 != nil {
 			LErr("Error unmarshaling data,", err3.Error())
@@ -62,10 +58,12 @@ func (s *SDEType) GetTotalISKSpent() int {
 			ioutil.WriteFile("MarketJSONError.json", a, 0777)
 			continue
 		}
-		Info(fmt.Sprintf("%v", Data))
 		for _, v := range Data.Items {
-			Info(v.Date, "has", v.Volume, "items")
+			//Info(v.Date, "has", v.Volume, "items")
 			TotalVolume += v.Volume
+		}
+		if len(Data.Items) == 0 {
+			Info("Region: " + l.Name + " has no buy orders, this could mean this region doesn't sell DUST items")
 		}
 	}
 	p, _ := strconv.Atoi(s.GetPrice())
