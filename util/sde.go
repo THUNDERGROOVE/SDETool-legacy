@@ -67,6 +67,18 @@ type TypeAttributes struct {
 	ShotPerRound           int
 }
 
+// The BonusModifier type combines bonusModifier attributes and modifier
+// in one type.
+type BonusModifers struct {
+	BonusMod         bool
+	AdaptorTags      []int /* BonusModAttributes    */
+	AffectedModifier int
+	ModuleTags       []int
+	ModiferValue     float64 /* Used for both subtypes*/
+	AttributeName    string  /* ModifierAttributes    */
+	Tags             []int
+}
+
 type StringTup struct {
 	One string
 	Two string
@@ -88,7 +100,7 @@ func (t *SDEType) HasTagS(tag string) bool {
 }
 
 // GetName returns mDisplayName
-func (t *SDEType) GetName() string {
+func (t SDEType) GetName() string {
 	if t.Attributes["mDisplayName"] == "" {
 		return GetTypeName(t.TypeID)
 	}
@@ -195,6 +207,29 @@ func (t *SDEType) PrintInfo() {
 		printFNotZero("-> Stamina recovery:", t.Attribs.StaminaRecovery)
 		printFNotZero("-> Melee damage", t.Attribs.MeleeDamage)
 	}
+	if t.Attributes["slotType"] == "SKL" { // Print SKill info.
+		fmt.Println("===== Skill =====")
+		fmt.Println("Affects:")
+		s := t.GetSkillBonusModifiers()
+		for _, v := range s {
+			if v.BonusMod {
+				fmt.Printf("-> Modified attribute: %v\n", GetSDETypeIDFast(v.AffectedModifier).GetName())
+				for _, vv := range v.AdaptorTags {
+					fmt.Printf("  -> Adaptor Tag: %v\n", GetSDETypeIDFast(vv).GetName())
+				}
+				for _, vv := range v.ModuleTags {
+					fmt.Printf("  -> Module Tag: %v\n", GetSDETypeIDFast(vv).GetName())
+				}
+				fmt.Printf("  -> Modifier amount: %d\n", int(valToPercent(v.ModiferValue)))
+			} else {
+				fmt.Println("Modified Attribute:", v.AttributeName)
+				for _, vv := range v.Tags {
+					fmt.Printf("  -> Tag: %v\n", GetSDETypeIDFast(vv).GetName())
+				}
+				fmt.Printf("  -> Modifier amount: %d\n", int(valToPercent(v.ModiferValue)))
+			}
+		}
+	}
 	if len(t.Modules) > 0 {
 		// if Color && t.ModulesAreValid() == false {
 		// 	term.Red(os.Stdout, "===== Applied Modules =====")
@@ -263,6 +298,91 @@ func (t *SDEType) PrintInfo() {
 		}
 
 	}
+}
+
+// GetSkillBonusModifiers is used to parse the attributes that a skill type
+// normally has into an easier to work with format.
+func (s *SDEType) GetSkillBonusModifiers() []BonusModifers {
+	b := make([]BonusModifers, 0)
+	for k, v := range s.FindInAttributes("bonusModifiers.") {
+		i, err := strconv.Atoi(strings.Split(k, ".")[1])
+		for {
+			if i >= len(b) && len(b) < 20 {
+				Info("Adding new BonusModifier", i, len(b))
+				b = append(b, BonusModifers{})
+			} else {
+				break
+			}
+		}
+		if err != nil {
+			LErr(fmt.Sprintf("strconv.Atoi(strings.Split(k, '.')[1] error while casting %v to int.", strings.Split(k, ".")[1]))
+		}
+		vi, err1 := strconv.Atoi(v)
+		if err1 != nil {
+			LErr("strconv.Atoi(v) error while casting v to int.")
+		}
+		vf, err2 := strconv.ParseFloat(v, 64)
+		if err2 != nil {
+			LErr("strconv.ParseFloat(v, 64) error while casting v to float64.")
+		}
+		Info("Found " + strings.Split(k, ".")[2])
+		b[i].BonusMod = true
+		switch strings.Split(k, ".")[2] {
+		case "adapterTags":
+			b[i].AdaptorTags = append(b[i].AdaptorTags, vi)
+		case "affectedModifier":
+			b[i].AffectedModifier = vi
+		case "modifierValue":
+			b[i].ModiferValue = vf
+		case "moduleTags":
+			b[i].ModuleTags = append(b[i].ModuleTags, vi)
+		}
+	}
+	offset := len(b)
+	for k, v := range s.FindInAttributes("modifier.") {
+		i, err := strconv.Atoi(strings.Split(k, ".")[1])
+		i += offset
+		for {
+			if i >= len(b) && len(b) < 20 {
+				Info("Adding new BonusModifier", i, len(b))
+				b = append(b, BonusModifers{})
+			} else {
+				break
+			}
+		}
+		if err != nil {
+			LErr(fmt.Sprintf("strconv.Atoi(strings.Split(k, '.')[1] error while casting %v to int.", strings.Split(k, ".")[1]))
+		}
+		vi, err1 := strconv.Atoi(v)
+		if err1 != nil {
+			Info("strconv.Atoi(v) error while casting v to int.")
+		}
+		vf, err2 := strconv.ParseFloat(v, 64)
+		if err2 != nil {
+			Info("strconv.ParseFloat(v, 64) error while casting v to float64.")
+		}
+		Info("Found " + strings.Split(k, ".")[2])
+		b[i].BonusMod = false
+		switch strings.Split(k, ".")[2] {
+		case "attributeName":
+			b[i].AttributeName = v
+		case "tags":
+			b[i].Tags = append(b[i].Tags, vi)
+		case "modifierValue":
+			b[i].ModiferValue = vf
+		}
+	}
+	Info("Found", len(b), "bonuses for this skill!")
+	return b
+}
+func (s *SDEType) FindInAttributes(in string) map[string]string {
+	a := make(map[string]string, 0)
+	for k, v := range s.Attributes {
+		if strings.Contains(k, in) {
+			a[k] = v
+		}
+	}
+	return a
 }
 
 // PrintInfo is a generic function to print the info of an SDEType

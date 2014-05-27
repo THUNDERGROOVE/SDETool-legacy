@@ -12,8 +12,8 @@ import (
 
 // valToPercent converts 1.05 to 5 or 0.95 to 95
 func valToPercent(v float64) float64 {
-	if v > 1 {
-		return (v - 1) * 100
+	if v < 1 {
+		return (1 - v) * 100
 	} else {
 		return v * 100
 	}

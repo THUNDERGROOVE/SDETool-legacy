@@ -13,6 +13,7 @@ clean:
 	rm -f SDETool
 	rm -f SDETool.exe
 dep:
+	echo Installing dependencies.
 	go get github.com/joshlf13/term
 	go install github.com/joshlf13/term
 	go get github.com/mattn/go-sqlite3
@@ -20,8 +21,8 @@ dep:
 	go get github.com/skratchdot/open-golang/open
 	go install github.com/skratchdot/open-golang/open
 install: linux
-	@echo Installing SDETool to /usr/local/bin
-	@echo this will only work on Linux
+	echo Installing SDETool to /usr/local/bin
+	echo this will only work on Linux
 	sudo cp -f SDETool /usr/local/bin/
 release:
 	goxc -bc "windows" -arch "amd64"
