@@ -59,6 +59,22 @@ func xspaces(x int) string {
 	return t
 }
 
+// CommaSep adds commas to an integer and returns as a string
+func CommaSep(v int64) string {
+	sign := ""
+	if v < 0 {
+		sign = "-"
+		v = 0 - v
+	}
+	parts := []string{"", "", "", "", "", "", "", ""}
+	j := len(parts) - 1
+	for v > 999 {
+		parts[j] = strconv.FormatInt(v%1000, 10)
+	}
+	parts[j] = strconv.Itoa(int(v))
+	return sign + strings.Join(parts[j:len(parts)], ",")
+}
+
 // PrintLicense is a simple function to just print our licensing for everything
 func PrintLicense() {
 	fmt.Println("SDETool is under the MIT license.  See LICENSE for more info")

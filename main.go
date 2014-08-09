@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
+
+	"time"
+
 	"github.com/THUNDERGROOVE/SDETool/args"
 	"github.com/THUNDERGROOVE/SDETool/config"
-	"github.com/THUNDERGROOVE/SDETool/server"
 	"github.com/THUNDERGROOVE/SDETool/util"
-	"io/ioutil"
-	"os"
-	"time"
 )
 
 var (
@@ -17,22 +16,15 @@ var (
 )
 
 func main() {
+	defer util.TimeFunction(time.Now(), "main()")
+
+	// If we panic we would like to log where the actual panic came
+	// from.  Panics written to console from the default runtime aren't
+	// useful to users to report bugs.
+	util.RecoverAllPanics()
+
 	util.SetCWD()
 	util.LogInit()
-	defer util.TimeFunction(time.Now(), "main()")
-	defer func() {
-		if r := recover(); r != nil {
-			util.DebugLog = true // Make it print and log always
-			fname := fmt.Sprintf("%s%s", time.Now().String(), "SDETool.panic")
-			util.LErr("Panic detected writing to file " + fname)
-			err := ioutil.WriteFile(fname, []byte(fmt.Sprintf("%v", r)), 0777)
-			if err != nil {
-				util.LErr("SUPER ERROR!?!?!?! Couldn't write panic log :/")
-			}
-			fmt.Println("Report this pls")
-			os.Exit(1)
-		}
-	}()
 	args.Init()
 	config.LoadConfig()
 
@@ -44,10 +36,12 @@ func main() {
 	util.SDEVersion = *args.SDEVersion
 	util.Color = util.Inverse(*args.NoColor)
 
-	util.Info("Debug logging on")
+	if util.DebugLog {
+		util.Info("Debug logging on")
+	}
+	// Setup database stuff
 	util.CheckFile()
 	util.DBInitialize()
-	util.Info("Testing", "Testing", 123, float64(456.789), util.GetSDETypeID(351681))
 
 	// Change to select switch?
 	switch {
@@ -69,9 +63,6 @@ func main() {
 		} else {
 			fmt.Println("No build date specified in binary")
 		}
-	case *args.RunServer:
-		*args.Debug = true
-		server.RunServer()
 	case *args.DumpTypes:
 		fmt.Println("Dumping types to text file :D")
 		util.DumpTypes()
@@ -93,7 +84,8 @@ func main() {
 		if *args.GetMarketData {
 			fmt.Println("===== Market Report =====")
 			a := t.GetTotalISKSpent()
-			fmt.Println("There has been", a, "ISK spent on", t.GetName())
+			t.GetDescription()
+			fmt.Println("There has been", util.CommaSep(int64(a)), "ISK spent on", t.GetName())
 		}
 	} else if *args.Damage != "" {
 		t := util.GetSDETypeID(util.ResolveInput(*args.Damage))
