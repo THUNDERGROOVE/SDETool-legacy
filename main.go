@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
-
+	"os"
+	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/THUNDERGROOVE/SDETool/args"
@@ -17,14 +19,20 @@ var (
 
 func main() {
 	defer util.TimeFunction(time.Now(), "main()")
-
+	util.LogInit()
 	// If we panic we would like to log where the actual panic came
 	// from.  Panics written to console from the default runtime aren't
-	// useful to users to report bugs.
-	util.RecoverAllPanics()
+	// useful to users to report bugs
+	defer func() {
+		if r := recover(); r != nil {
+			util.LErr("Oh noes; We paniced")
+			_, file, line, ok := runtime.Caller(0)
+			f, _ := filepath.Split(file)
+			util.LErr(fmt.Sprintf("%v | %v:%v %v", r, f, line, ok))
+		}
+	}()
 
 	util.SetCWD()
-	util.LogInit()
 	args.Init()
 	config.LoadConfig()
 
@@ -69,7 +77,8 @@ func main() {
 	case *args.GetMarketData && *args.InfoFlag == "":
 		fmt.Println("The -m(arket) flag requires that you specifiy a type with -i")
 	case *args.ForcePanic:
-		util.ForcePanic()
+		k := make([]byte, 0)
+		print(string(k[99]))
 	}
 	if *args.SearchFlag != "" {
 		fmt.Println("Searching value: '" + *args.SearchFlag + "'")
@@ -108,4 +117,5 @@ func main() {
 			fmt.Println("->", *args.BasicModCount, "Complex damage modifiers")
 		}
 	}
+	os.Exit(0)
 }
