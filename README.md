@@ -1,3 +1,9 @@
+Notice
+======
+I'm no longer working on SDETool.  When I first started working on it I just had learned Go and as such it's a huge mess.
+
+However I'm working on SDETool2 over [here](http://github.com/THUNDERGROOVE/SDETool2)
+
 SDETool
 =======
 
